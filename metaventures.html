@@ -3,305 +3,841 @@
 <head>
   <meta charset="UTF-8" />
   <title>MetaVenture | Metamorpho</title>
-  <script src="https://cdn.tailwindcss.com?cache=1"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     img { display: block; max-width: 100%; height: auto; }
     a { text-decoration: none; }
-    body { background: #0B1722; color: #fff; }
+    
+    :root {
+      --meta-teal: #34b29c;
+      --meta-red: #d2001a;
+      --meta-dark: #0B1722;
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-highlight: rgba(255, 255, 255, 0.08);
+    }
 
     @font-face {
       font-family: 'MetaFont';
-      src:
-        url('/assets/fonts/MetaFont-Regular.woff2') format('woff2'),
-        url('/assets/fonts/MetaFont.otf') format('opentype');
+      src: url('/assets/fonts/MetaFont-Regular.woff2') format('woff2'),
+           url('/assets/fonts/MetaFont.otf') format('opentype');
+      font-display: swap;
     }
     @font-face {
       font-family: 'metabold';
-      src:
-        url('/assets/fonts/metabold-Regular.woff2') format('woff2'),
-        url('/assets/fonts/metabold.otf') format('opentype');
+      src: url('/assets/fonts/metabold-Regular.woff2') format('woff2'),
+           url('/assets/fonts/metabold.otf') format('opentype');
+      font-display: swap;
     }
-    body { font-family: 'MetaFont', sans-serif; }
-    .font-alt { font-family: 'metabold', sans-serif; }
 
+    body { 
+      font-family: 'MetaFont', 'Space Grotesk', sans-serif; 
+      background: var(--meta-dark); 
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    .font-alt { font-family: 'metabold', 'Space Grotesk', sans-serif; }
+
+    /* ===== ENHANCED GLASSMORPHISM ===== */
     .glass {
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.20);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
     }
-    .nav-pill {
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-    }
-    .divider { border-top: 1px solid rgba(255,255,255,0.12); }
 
+    .glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .glass:hover::before {
+      opacity: 1;
+    }
+
+    .glass-strong {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+    }
+
+    .nav-pill {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .divider { 
+      border-top: 1px solid rgba(255, 255, 255, 0.12); 
+    }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    .ventures-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: url("assets/images/metaventures.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: brightness(0.35) contrast(1.1);
+      transform: scale(1.1);
+      animation: bgZoom 20s ease-in-out infinite alternate;
+    }
+
+    .ventures-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(11, 23, 34, 0.6) 100%);
+      pointer-events: none;
+    }
+
+    @keyframes bgZoom {
+      0% { transform: scale(1.1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1%, -1%); }
+    }
+
+    /* ===== FLOATING ORBS ===== */
+    .ambient-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--meta-teal);
+      top: 10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--meta-red);
+      bottom: 20%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #fff;
+      top: 50%;
+      left: 50%;
+      animation-delay: -10s;
+      opacity: 0.08;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.9); }
+      75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    /* ===== ENHANCED INPUTS ===== */
     input, select {
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.20);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       outline: none;
       border-radius: 16px;
       padding: 14px 16px;
       width: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
     }
-    input::placeholder { color: rgba(255,255,255,0.55); }
 
+    input:focus, select:focus {
+      border-color: rgba(52, 178, 156, 0.5);
+      box-shadow: 
+        0 0 0 3px rgba(52, 178, 156, 0.1),
+        0 10px 30px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.06) 100%);
+    }
+
+    input::placeholder { 
+      color: rgba(255, 255, 255, 0.45); 
+    }
+
+    select option {
+      background: var(--meta-dark);
+      color: #fff;
+    }
+
+    /* ===== ENHANCED BUTTONS ===== */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 14px 18px;
+      padding: 14px 24px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      transition: transform .15s ease, opacity .15s ease;
-      font-family: 'metabold', sans-serif;
-      letter-spacing: .08em;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: linear-gradient(120deg, var(--meta-teal), var(--meta-red));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'metabold', 'Space Grotesk', sans-serif;
+      letter-spacing: 0.08em;
       font-size: 12px;
       text-transform: uppercase;
-      opacity: .92;
+      opacity: 0.95;
+      position: relative;
+      overflow: hidden;
+      color: #fff;
     }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
     .btn:hover { 
-      transform: translateY(-2px); opacity: 1; 
+      background-position: 100% 0;
+      transform: translateY(-3px);
+      opacity: 1;
+      box-shadow: 
+        0 20px 40px rgba(52, 178, 156, 0.3),
+        0 0 60px rgba(52, 178, 156, 0.1);
     }
 
-    .ventures-bg{
-  position: fixed;
-  inset: 0;
-  z-index: -1;
+    .btn:hover::before {
+      transform: translateX(100%);
+    }
 
-  background-image: url("assets/images/metaventures.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    .btn:active {
+      transform: translateY(-1px);
+    }
 
-  filter: brightness(0.4);
-}
+    /* ===== LOCATION CARDS ===== */
+    .location-card {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
 
-.btn {
-  background: linear-gradient(120deg, #34b29c, #d2001a);
-  background-size: 200% 100%;
-}
+    .location-card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, 
+        rgba(52, 178, 156, 0.3) 0%, 
+        transparent 50%, 
+        rgba(210, 0, 26, 0.2) 100%);
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
 
-.btn:hover {
-  background-position: 100% 0;
-}
-    html { scroll-behavior: smooth; scroll-padding-top: 104px; }
+    .location-card:hover::after {
+      opacity: 1;
+    }
+
+    .location-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(52, 178, 156, 0.08);
+    }
+
+    .location-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .location-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--meta-teal);
+      box-shadow: 0 0 10px var(--meta-teal);
+    }
+
+    /* ===== VIDEO CONTAINER ===== */
+    .video-container {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .video-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, 
+        rgba(52, 178, 156, 0.1) 0%, 
+        transparent 50%, 
+        rgba(210, 0, 26, 0.1) 100%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .video-container:hover::before {
+      opacity: 1;
+    }
+
+    .video-container:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(52, 178, 156, 0.1);
+    }
+
+    /* ===== SCROLL BEHAVIOR ===== */
+    html { 
+      scroll-behavior: smooth; 
+      scroll-padding-top: 104px; 
+    }
+    
     [id] { scroll-margin-top: 104px; }
-    iframe { display: block; max-width: 100%; }
+
     @media (max-width: 767px) {
       html { scroll-padding-top: 88px; }
       [id] { scroll-margin-top: 88px; }
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ===== STAGGER CHILDREN ===== */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .stagger-children.active > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger-children.active > *:nth-child(1) { transition-delay: 0.1s; }
+    .stagger-children.active > *:nth-child(2) { transition-delay: 0.2s; }
+    .stagger-children.active > *:nth-child(3) { transition-delay: 0.3s; }
+
+    .stagger-children > * {
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== MAGNETIC HOVER ===== */
+    .magnetic {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== TEXT GRADIENT ===== */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--meta-teal) 0%, #4dd4b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .text-gradient-alt {
+      background: linear-gradient(135deg, var(--meta-red) 0%, #ff4d6d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== PULSE ANIMATION ===== */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(52, 178, 156, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(52, 178, 156, 0.5); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    /* ===== NAV LINKS ===== */
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* ===== SCROLL PROGRESS ===== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      z-index: 9999;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    /* ===== FORM SUCCESS MESSAGE ===== */
+    .success-message {
+      background: linear-gradient(135deg, 
+        rgba(52, 178, 156, 0.15) 0%, 
+        rgba(52, 178, 156, 0.05) 100%);
+      border: 1px solid rgba(52, 178, 156, 0.3);
+      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== AGE HIGHLIGHT ===== */
+    .age-highlight {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, 
+        rgba(210, 0, 26, 0.2) 0%, 
+        rgba(210, 0, 26, 0.1) 100%);
+      border: 1px solid rgba(210, 0, 26, 0.3);
+      color: #ff6b7a;
+      font-weight: 600;
+    }
+
+    /* ===== FOOTER LINKS ===== */
+    footer a {
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--meta-teal);
+      transform: translateY(-2px);
+    }
+
+    /* ===== REQUIREMENT LIST ===== */
+    .requirement-list li {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .requirement-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--meta-teal);
+      font-weight: bold;
+    }
+
+    /* Mobile nav */
+    #mobileMenu {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mobileMenu.open {
+      max-height: 520px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
     }
   </style>
 </head>
 
 <body class="overflow-x-hidden">
-<div class="ventures-bg"></div>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Ambient Background Orbs -->
+  <div class="ambient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Fixed Background -->
+  <div class="ventures-bg"></div>
+
   <!-- ================= NAV ================= -->
-  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50">
-    <a href="/index.html" class="flex items-center gap-3">
-      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16" alt="Meta logo" />
-      <span class="hidden md:block text-xs tracking-widest opacity-80">METAMORPHO</span>
+  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
+    <a href="/index.html" class="flex items-center gap-3 magnetic group">
+      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
+      <span class="hidden md:block text-xs tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">METAMORPHO</span>
     </a>
 
     <div class="hidden md:block nav-pill px-10 py-4 rounded-full shadow-lg">
       <ul class="flex gap-8 text-sm tracking-wider items-center">
-        <li><a class="opacity-85 hover:opacity-100" href="/index.html">HOME</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/about.html">ABOUT</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/gallery.html">GALLERY</a></li>
-        <li><a class="opacity-100 font-alt" href="/metaventures.html">METAVENTURES</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/shop.html">SHOP</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/contact.html">CONTACT</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/faq.html">FAQ</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/index.html">HOME</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/about.html">ABOUT</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/gallery.html">GALLERY</a></li>
+        <li><a class="nav-link opacity-100 font-alt active" href="/metaventures.html">METAVENTURES</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/shop.html">SHOP</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/contact.html">CONTACT</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/faq.html">FAQ</a></li>
       </ul>
     </div>
 
-    <a href="/contact.html" class="md:hidden glass px-4 py-2 rounded-full text-xs tracking-widest">
-      CONTACT
-    </a>
+    <!-- Mobile menu button -->
+    <button id="menuBtn" class="md:hidden glass rounded-full px-4 py-2 text-sm tracking-widest" aria-expanded="false"
+      aria-controls="mobileMenu">
+      MENU
+    </button>
   </nav>
 
+  <!-- Mobile nav panel -->
+  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4">
+    <ul class="grid gap-2 text-sm tracking-wider">
+      <li><a class="navlink block" href="index.html">HOME</a></li>
+      <li><a class="navlink block" href="about.html">ABOUT</a></li>
+      <li><a class="navlink block" href="gallery.html">GALLERY</a></li>
+      <li><a class="navlink block" href="metaventures.html">METAVENTURES</a></li>
+      <li><a class="navlink block" href="shop.html">SHOP</a></li>
+      <li><a class="navlink block" href="contact.html">CONTACT</a></li>
+      <li><a class="navlink block" href="faq.html">FAQ</a></li>
+      <li><a class="navlink block" href="market.html">MARKET</a></li>
+    </ul>
+  </div>
+  
   <!-- ================= HERO ================= -->
   <section class="pt-28 md:pt-32 px-6 md:px-12">
     <div class="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-10 items-start">
-      <div>
-        <div class="text-xs tracking-[0.35em] opacity-70 mb-4">METAVENTURE</div>
-        <h1 class="text-5xl md:text-6xl font-alt leading-tight">Your next leadership adventure.</h1>
-        <p class="mt-6 text-white/75 leading-relaxed max-w-[90ch]">
+      <div class="reveal-left">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-2 h-2 rounded-full bg-[#34b29c] pulse-glow"></span>
+          <div class="text-xs tracking-[0.35em] opacity-70">METAVENTURE</div>
+        </div>
+        <h1 class="text-5xl md:text-6xl font-alt leading-tight mb-6">
+          Your next <span class="text-gradient">leadership</span> adventure.
+        </h1>
+        <p class="text-white/75 leading-relaxed max-w-[90ch] text-lg">
           MetaVenture is a leadership transformation and experiential adventure year for students aged
-          <span class="font-alt">20–25</span>. It’s a one-year process built around serving opportunities,
+          <span class="age-highlight font-alt">20–25</span>. It's a one-year process built around serving opportunities,
           leadership formation, and real experiences that shape authentic leaders.
         </p>
 
-        <div class="mt-8 glass rounded-3xl p-6 md:p-8">
-          <div class="text-sm tracking-widest opacity-70 mb-3">ELIGIBILITY</div>
-          <ul class="space-y-2 text-white/75 leading-relaxed">
-            <li>• You must first complete your Metamorpho year as a student.</li>
-            <li>• Then you can apply to join MetaVenture</li>
+        <div class="mt-8 glass rounded-3xl p-6 md:p-8 hover-lift">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#34b29c]/20 flex items-center justify-center">
+              <svg class="w-5 h-5 text-[#34b29c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="text-sm tracking-widest opacity-70">ELIGIBILITY</div>
+          </div>
+          <ul class="requirement-list space-y-3 text-white/75 leading-relaxed">
+            <li>You must first complete your Metamorpho year as a student.</li>
+            <li>Then you can apply to join MetaVenture</li>
           </ul>
-          <div class="mt-6 flex flex-col sm:flex-row gap-3">
-            <a class="btn w-full sm:w-auto" href="#apply">Register Interest</a>
-            <a class="btn w-full sm:w-auto" href="/contact.html">Contact Us</a>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3 stagger-children" id="heroButtons">
+            <a class="btn w-full sm:w-auto magnetic" href="#apply">Register Interest</a>
+            <a class="btn w-full sm:w-auto magnetic" href="/contact.html">Contact Us</a>
           </div>
         </div>
       </div>
 
-      <div class="glass rounded-3xl p-6 md:p-10">
-        <div class="text-sm tracking-widest opacity-70 mb-2">LOCATIONS</div>
-        <h2 class="text-2xl md:text-3xl font-alt">Where you can join</h2>
-        <p class="mt-3 text-white/70 leading-relaxed">
+      <div class="glass rounded-3xl p-6 md:p-10 reveal-right stagger-children" id="locationsPanel">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-full bg-[#d2001a]/20 flex items-center justify-center">
+            <svg class="w-5 h-5 text-[#d2001a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+          </div>
+          <div class="text-sm tracking-widest opacity-70">LOCATIONS</div>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-alt mb-3">Where you can join</h2>
+        <p class="text-white/70 leading-relaxed mb-6">
           MetaVenture currently runs in these regions and partner campuses. 
         </p>
 
-        <div class="mt-6 grid gap-4">
-          <div class="glass rounded-3xl p-5">
-            <div class="text-xs tracking-widest opacity-70">PRETORIA</div>
-            <div class="mt-2 text-xl font-alt">Doxa Deo Brooklyn</div>
-            <div class="mt-3 text-white/70 text-sm leading-relaxed">
+        <div class="grid gap-4">
+          <div class="location-card glass rounded-3xl p-5 magnetic">
+            <div class="location-badge mb-3">Pretoria</div>
+            <div class="text-xl font-alt mb-2">Doxa Deo Brooklyn</div>
+            <div class="text-white/70 text-sm leading-relaxed">
               Requirement: you must have completed Metamorpho as a student in Pretoria. 
             </div>
           </div>
 
-          <div class="glass rounded-3xl p-5">
-            <div class="text-xs tracking-widest opacity-70">CAPE TOWN</div>
-            <div class="mt-2 text-xl font-alt">Doxa Deo campuses</div>
-            <div class="mt-2 text-white/70 text-sm leading-relaxed">
+          <div class="location-card glass rounded-3xl p-5 magnetic">
+            <div class="location-badge mb-3">Cape Town</div>
+            <div class="text-xl font-alt mb-2">Doxa Deo campuses</div>
+            <div class="text-white/70 text-sm leading-relaxed mb-2">
               Includes: Langeberg, Helderberg, Tygerville, Stellenbosch (and related region campuses). 
             </div>
-            <div class="mt-3 text-white/70 text-sm leading-relaxed">
+            <div class="text-white/70 text-sm leading-relaxed">
               Requirement: you must be available to serve as a youth leader in a local Doxa Deo campus. 
             </div>
           </div>
 
-          <div class="glass rounded-3xl p-5">
-            <div class="text-xs tracking-widest opacity-70">HARTIES</div>
-            <div class="mt-2 text-xl font-alt">Doxa Deo Xanadu</div>
-            <div class="mt-3 text-white/70 text-sm leading-relaxed">
+          <div class="location-card glass rounded-3xl p-5 magnetic">
+            <div class="location-badge mb-3">Harties</div>
+            <div class="text-xl font-alt mb-2">Doxa Deo Xanadu</div>
+            <div class="text-white/70 text-sm leading-relaxed">
               Requirement: you will form part of a group of student teachers. 
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
   <!-- ================= VIDEO ================= -->
-<section class="px-6 md:px-12 mt-16 md:mt-24">
-  <div class="max-w-[1600px] mx-auto glass rounded-[2.5rem] p-6 md:p-10">
-
-    <div class="text-xs tracking-[0.35em] opacity-70 mb-3">VIDEO</div>
-    <h2 class="text-3xl md:text-4xl font-alt">Quick MetaVenture videos</h2>
-
-    <div class="mt-8 grid md:grid-cols-2 gap-6">
-
-      <!-- Video 1 -->
-      <div class="glass rounded-3xl overflow-hidden border border-white/20 aspect-video">
-        <iframe
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/kNAk8_Bq04Q"
-          title="MetaVenture Cape Town"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
+  <section class="px-6 md:px-12 mt-16 md:mt-24 reveal">
+    <div class="max-w-[1600px] mx-auto glass rounded-[2.5rem] p-6 md:p-10 video-container">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-2 h-2 rounded-full bg-[#d2001a] pulse-glow"></span>
+        <div class="text-xs tracking-[0.35em] opacity-70">VIDEO</div>
       </div>
+      <h2 class="text-3xl md:text-4xl font-alt mb-8">Quick MetaVenture videos</h2>
 
-      <!-- Video 2 -->
-      <div class="glass rounded-3xl overflow-hidden border border-white/20 aspect-video">
-        <iframe
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/ZrPVD0LOnOI"
-          title="MetaVenture Harties"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
+      <div class="mt-8 grid md:grid-cols-2 gap-6 stagger-children" id="videoGrid">
+        <!-- Video 1 -->
+        <div class="glass rounded-3xl overflow-hidden border border-white/20 aspect-video video-container magnetic">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/kNAk8_Bq04Q"
+            title="MetaVenture Cape Town"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <!-- Video 2 -->
+        <div class="glass rounded-3xl overflow-hidden border border-white/20 aspect-video video-container magnetic">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/ZrPVD0LOnOI"
+            title="MetaVenture Harties"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
       </div>
-
     </div>
-
-  </div>
-</section>
+  </section>
 
   <!-- ================= APPLY / INTEREST FORM ================= -->
   <section id="apply" class="px-6 md:px-12 mt-16 md:mt-24 pb-16 md:pb-24">
     <div class="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-8 items-start">
-      <div class="glass rounded-3xl p-6 md:p-10">
-        <div class="text-xs tracking-[0.35em] opacity-70 mb-3">UNLOCK YOUR FUTURE</div>
-        <h2 class="text-3xl md:text-4xl font-alt">Register your interest</h2>
-        <p class="mt-3 text-white/70 leading-relaxed max-w-[90ch]">
-          MetaVenture is a one-year leadership and adventure journey. If you’re interested, send your details and we’ll direct you
+      <div class="glass rounded-3xl p-6 md:p-10 reveal-left hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#34b29c]/30 to-[#d2001a]/30 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <div class="text-xs tracking-[0.35em] opacity-70">UNLOCK YOUR FUTURE</div>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-alt mb-4">Register your interest</h2>
+        <p class="text-white/70 leading-relaxed max-w-[90ch] mb-6">
+          MetaVenture is a one-year leadership and adventure journey. If you're interested, send your details and we'll direct you
           to the correct location contact. 
         </p>
 
-        <div class="mt-6 divider"></div>
+        <div class="divider mb-6"></div>
 
-        <div class="mt-6 flex flex-col sm:flex-row gap-3">
-          <a class="btn w-full sm:w-auto" href="/pretoria.html">Pretoria Campus</a>
-          <a class="btn w-full sm:w-auto" href="/capetown.html">Cape Town Campus</a>
-          <a class="btn w-full sm:w-auto" href="/contact.html">General Contact</a>
+        <div class="flex flex-col sm:flex-row gap-3 stagger-children" id="ctaButtons">
+          <a class="btn w-full sm:w-auto magnetic" href="/pretoria.html">Pretoria Campus</a>
+          <a class="btn w-full sm:w-auto magnetic" href="/capetown.html">Cape Town Campus</a>
+          <a class="btn w-full sm:w-auto magnetic" href="/contact.html">General Contact</a>
         </div>
       </div>
 
-      <div class="glass rounded-3xl p-6 md:p-10">
-        <div class="text-sm tracking-widest opacity-70 mb-2">INTEREST FORM</div>
-        <h3 class="text-2xl md:text-3xl font-alt">MetaVenture enquiry</h3>
+      <div class="glass rounded-3xl p-6 md:p-10 reveal-right">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-full bg-[#34b29c]/20 flex items-center justify-center">
+            <svg class="w-5 h-5 text-[#34b29c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div class="text-sm tracking-widest opacity-70">INTEREST FORM</div>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-alt mb-6">MetaVenture enquiry</h3>
 
-        <form id="mvForm" class="mt-7 space-y-4">
+        <form id="mvForm" class="space-y-5">
           <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label class="text-xs tracking-widest opacity-70" for="first">FIRST NAME</label>
+            <div class="group">
+              <label class="text-xs tracking-widest opacity-70 mb-2 block" for="first">FIRST NAME</label>
               <input id="first" name="first" type="text" placeholder="First" required />
             </div>
-            <div>
-              <label class="text-xs tracking-widest opacity-70" for="last">LAST NAME</label>
+            <div class="group">
+              <label class="text-xs tracking-widest opacity-70 mb-2 block" for="last">LAST NAME</label>
               <input id="last" name="last" type="text" placeholder="Last" required />
             </div>
           </div>
 
           <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label class="text-xs tracking-widest opacity-70" for="email">EMAIL</label>
+            <div class="group">
+              <label class="text-xs tracking-widest opacity-70 mb-2 block" for="email">EMAIL</label>
               <input id="email" name="email" type="email" placeholder="name@email.com" required />
             </div>
-            <div>
-              <label class="text-xs tracking-widest opacity-70" for="phone">PHONE NUMBER</label>
+            <div class="group">
+              <label class="text-xs tracking-widest opacity-70 mb-2 block" for="phone">PHONE NUMBER</label>
               <input id="phone" name="phone" type="tel" placeholder="+27..." required />
             </div>
           </div>
 
-          <div>
-            <label class="text-xs tracking-widest opacity-70" for="location">CHOOSE YOUR LOCATION</label>
+          <div class="group">
+            <label class="text-xs tracking-widest opacity-70 mb-2 block" for="location">CHOOSE YOUR LOCATION</label>
             <select id="location" name="location" required>
-              <option value="" disabled selected>Select</option>
+              <option value="" disabled selected>Select your location</option>
               <option value="Pretoria">MetaVenture Pretoria</option>
               <option value="Cape Town">MetaVenture Cape Town</option>
               <option value="Harties">MetaVenture Harties</option>
             </select>
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-2">
-            <button type="submit" class="btn w-full sm:w-auto">Submit</button>
-            <a id="mvMailto" class="text-xs tracking-widest opacity-80 hover:opacity-100" href="#">
+          <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-4">
+            <button type="submit" class="btn magnetic">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+              </svg>
+              Submit
+            </button>
+            <a id="mvMailto" class="text-xs tracking-widest opacity-80 hover:opacity-100 hover:text-[#34b29c] transition-colors flex items-center gap-2" href="#">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
               or send via email
             </a>
           </div>
 
-          <div id="mvSuccess" class="hidden mt-4 glass rounded-2xl p-4 text-white/80">
-            ✅ Email prepared. If nothing opened automatically, click “send via email”.
+          <div id="mvSuccess" class="hidden mt-4 success-message rounded-2xl p-4 text-white/90 flex items-center gap-3">
+            <svg class="w-5 h-5 text-[#34b29c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Email prepared. If nothing opened automatically, click "send via email".</span>
           </div>
 
         </form>
@@ -310,9 +846,9 @@
   </section>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="px-6 md:px-12 pb-10">
+  <footer class="px-6 md:px-12 pb-10 reveal">
     <div class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 magnetic">
         <img src="/assets/images/meta.logo.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
         <div class="text-xs tracking-widest opacity-70">METAMORPHO</div>
       </div>
@@ -329,14 +865,78 @@
     </div>
   </footer>
 
+  <!-- ================= SCRIPTS ================= -->
   <script>
+    // Year update
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // Scroll Progress
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      scrollProgress.style.transform = `scaleX(${scrolled})`;
+    }, { passive: true });
+
+    // Intersection Observer for reveal animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          if (entry.target.classList.contains('stagger-children')) {
+            entry.target.classList.add('active');
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe all reveal elements
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Magnetic hover effect
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+      });
+      
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'translate(0, 0)';
+      });
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      
+      if (currentScroll > 100) {
+        navbar.classList.add('glass-strong');
+        navbar.style.padding = '0.75rem 1.5rem';
+      } else {
+        navbar.classList.remove('glass-strong');
+        navbar.style.padding = '';
+      }
+      
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    // Form functionality
     const form = document.getElementById("mvForm");
     const mvMailto = document.getElementById("mvMailto");
     const mvSuccess = document.getElementById("mvSuccess");
 
-    // NOTE: Replace this with the real MetaVenture inbox once confirmed
     const TO_EMAIL = "info@metamorpho.co.za";
 
     function enc(s){ return encodeURIComponent(s || ""); }
@@ -371,7 +971,6 @@ Notes:
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       updateMailto();
-      // Attempt to open email client immediately
       window.location.href = mvMailto.href;
       mvSuccess.classList.remove("hidden");
       mvSuccess.scrollIntoView({ behavior: "smooth", block: "start" });

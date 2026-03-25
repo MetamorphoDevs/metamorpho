@@ -3,133 +3,555 @@
 <head>
   <meta charset="UTF-8" />
   <title>Shop | Metamorpho</title>
-  <script src="https://cdn.tailwindcss.com?cache=1"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     img { display: block; max-width: 100%; height: auto; }
     a { text-decoration: none; }
-    body { background: #0B1722; color: #fff; }
+    
+    :root {
+      --meta-teal: #34b29c;
+      --meta-red: #d2001a;
+      --meta-dark: #0B1722;
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-highlight: rgba(255, 255, 255, 0.08);
+    }
 
     @font-face {
       font-family: 'MetaFont';
-      src:
-        url('/assets/fonts/MetaFont-Regular.woff2') format('woff2'),
-        url('/assets/fonts/MetaFont.otf') format('opentype');
+      src: url('/assets/fonts/MetaFont-Regular.woff2') format('woff2'),
+           url('/assets/fonts/MetaFont.otf') format('opentype');
+      font-display: swap;
     }
     @font-face {
       font-family: 'metabold';
-      src:
-        url('/assets/fonts/metabold-Regular.woff2') format('woff2'),
-        url('/assets/fonts/metabold.otf') format('opentype');
+      src: url('/assets/fonts/metabold-Regular.woff2') format('woff2'),
+           url('/assets/fonts/metabold.otf') format('opentype');
+      font-display: swap;
     }
-    body { font-family: 'MetaFont', sans-serif; }
-    .font-alt { font-family: 'metabold', sans-serif; }
 
+    body { 
+      font-family: 'MetaFont', 'Space Grotesk', sans-serif; 
+      background: var(--meta-dark); 
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .font-alt { font-family: 'metabold', 'Space Grotesk', sans-serif; }
+
+    /* ===== ENHANCED GLASSMORPHISM ===== */
     .glass {
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.20);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
     }
-    .nav-pill {
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-    }
-    .divider { border-top: 1px solid rgba(255,255,255,0.12); }
 
+    .glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .glass:hover::before {
+      opacity: 1;
+    }
+
+    .glass-strong {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+    }
+
+    .nav-pill {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .divider { 
+      border-top: 1px solid rgba(255, 255, 255, 0.12); 
+    }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    .shop-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(ellipse at top, rgba(52, 178, 156, 0.15) 0%, transparent 50%),
+                  radial-gradient(ellipse at bottom right, rgba(210, 0, 26, 0.1) 0%, transparent 50%),
+                  var(--meta-dark);
+    }
+
+    /* ===== FLOATING ORBS ===== */
+    .ambient-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 300px;
+      height: 300px;
+      background: var(--meta-teal);
+      top: 20%;
+      left: -5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 250px;
+      height: 250px;
+      background: var(--meta-red);
+      bottom: 30%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: #fff;
+      top: 60%;
+      left: 30%;
+      animation-delay: -10s;
+      opacity: 0.08;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.9); }
+      75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    /* ===== ENHANCED BUTTONS ===== */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 14px 18px;
+      padding: 14px 28px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      transition: transform .15s ease, opacity .15s ease;
-      font-family: 'metabold', sans-serif;
-      letter-spacing: .08em;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: linear-gradient(120deg, var(--meta-teal), var(--meta-red));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'metabold', 'Space Grotesk', sans-serif;
+      letter-spacing: 0.08em;
       font-size: 12px;
       text-transform: uppercase;
-      opacity: .92;
+      opacity: 0.95;
+      position: relative;
+      overflow: hidden;
+      color: #fff;
     }
-    .btn:hover { transform: translateY(-2px); opacity: 1; }
-    html { scroll-behavior: smooth; scroll-padding-top: 104px; }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn:hover { 
+      background-position: 100% 0;
+      transform: translateY(-3px);
+      opacity: 1;
+      box-shadow: 
+        0 20px 40px rgba(52, 178, 156, 0.3),
+        0 0 60px rgba(52, 178, 156, 0.1);
+    }
+
+    .btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.08) 100%);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(255, 255, 255, 0.05);
+    }
+
+    /* ===== SCROLL BEHAVIOR ===== */
+    html { 
+      scroll-behavior: smooth; 
+      scroll-padding-top: 104px; 
+    }
+    
     [id] { scroll-margin-top: 104px; }
-    iframe { display: block; max-width: 100%; }
+
     @media (max-width: 767px) {
       html { scroll-padding-top: 88px; }
       [id] { scroll-margin-top: 88px; }
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ===== MAGNETIC HOVER ===== */
+    .magnetic {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== TEXT GRADIENT ===== */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--meta-teal) 0%, #4dd4b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== PULSE ANIMATION ===== */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(52, 178, 156, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(52, 178, 156, 0.5); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    /* ===== NAV LINKS ===== */
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* ===== COUNTDOWN ANIMATION ===== */
+    .countdown-pulse {
+      animation: countdownPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes countdownPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    /* ===== CANCEL BUTTON ===== */
+    .cancel-btn {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .cancel-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(1);
+      transition: transform 0.3s ease;
+    }
+
+    .cancel-btn:hover::after {
+      transform: scaleX(0);
+    }
+
+    .cancel-btn:hover {
+      color: var(--meta-red);
+    }
+
+    /* ===== FOOTER LINKS ===== */
+    footer a {
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--meta-teal);
+      transform: translateY(-2px);
+    }
+
+    /* ===== SHOP CARD ===== */
+    .shop-card {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .shop-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 40px 80px rgba(0, 0, 0, 0.4),
+        0 0 60px rgba(52, 178, 156, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      z-index: 9999;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.1s ease;
+    }
+
+    /* ===== CANCELLED STATE ===== */
+    .cancelled-state {
+      background: linear-gradient(135deg, 
+        rgba(210, 0, 26, 0.1) 0%, 
+        rgba(210, 0, 26, 0.05) 100%);
+      border: 1px solid rgba(210, 0, 26, 0.2);
+      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile nav */
+    #mobileMenu {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mobileMenu.open {
+      max-height: 520px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
     }
   </style>
 </head>
 
 <body class="overflow-x-hidden">
 
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Ambient Background Orbs -->
+  <div class="ambient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Background -->
+  <div class="shop-bg"></div>
+
   <!-- ================= NAV ================= -->
-  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50">
-    <a href="/index.html" class="flex items-center gap-3">
-      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16" alt="Meta logo" />
-      <span class="hidden md:block text-xs tracking-widest opacity-80">METAMORPHO</span>
+  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
+    <a href="/index.html" class="flex items-center gap-3 magnetic group">
+      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
+      <span class="hidden md:block text-xs tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">METAMORPHO</span>
     </a>
 
     <div class="hidden md:block nav-pill px-10 py-4 rounded-full shadow-lg">
       <ul class="flex gap-8 text-sm tracking-wider items-center">
-        <li><a class="opacity-85 hover:opacity-100" href="/index.html">HOME</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/about.html">ABOUT</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/gallery.html">GALLERY</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/metaventures.html">METAVENTURES</a></li>
-        <li><a class="opacity-100 font-alt" href="/shop.html">SHOP</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/contact.html">CONTACT</a></li>
-        <li><a class="opacity-85 hover:opacity-100" href="/faq.html">FAQ</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/index.html">HOME</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/about.html">ABOUT</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/gallery.html">GALLERY</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/metaventures.html">METAVENTURES</a></li>
+        <li><a class="nav-link opacity-100 font-alt active" href="/shop.html">SHOP</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/contact.html">CONTACT</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/faq.html">FAQ</a></li>
       </ul>
     </div>
 
-    <a href="/contact.html" class="md:hidden glass px-4 py-2 rounded-full text-xs tracking-widest">
-      CONTACT
-    </a>
+    <!-- Mobile menu button -->
+    <button id="menuBtn" class="md:hidden glass rounded-full px-4 py-2 text-sm tracking-widest" aria-expanded="false"
+      aria-controls="mobileMenu">
+      MENU
+    </button>
   </nav>
 
+  <!-- Mobile nav panel -->
+  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4">
+    <ul class="grid gap-2 text-sm tracking-wider">
+      <li><a class="navlink block" href="index.html">HOME</a></li>
+      <li><a class="navlink block" href="about.html">ABOUT</a></li>
+      <li><a class="navlink block" href="gallery.html">GALLERY</a></li>
+      <li><a class="navlink block" href="metaventures.html">METAVENTURES</a></li>
+      <li><a class="navlink block" href="shop.html">SHOP</a></li>
+      <li><a class="navlink block" href="contact.html">CONTACT</a></li>
+      <li><a class="navlink block" href="faq.html">FAQ</a></li>
+      <li><a class="navlink block" href="market.html">MARKET</a></li>
+    </ul>
+  </div>
+
   <!-- ================= CONTENT ================= -->
-  <section class="pt-28 md:pt-32 px-6 md:px-12 pb-16 md:pb-24">
-    <div class="max-w-[900px] mx-auto glass rounded-[2.5rem] p-8 md:p-12 text-center">
-      <div class="text-xs tracking-[0.35em] opacity-70 mb-4">SHOP</div>
-      <h1 class="text-4xl md:text-5xl font-alt leading-tight">The Meta Store lives on a separate site.</h1>
-      <p class="mt-5 text-white/75 leading-relaxed">
-        You’re about to open our online store in a new tab. If nothing happens automatically, use the button below.
+  <section class="pt-28 md:pt-32 px-6 md:px-12 pb-16 md:pb-24 flex-grow flex items-center justify-center">
+    <div class="max-w-[900px] w-full mx-auto glass rounded-[2.5rem] p-8 md:p-12 text-center shop-card reveal-scale">
+      <!-- Decorative top element -->
+      <div class="flex justify-center mb-6">
+        <div class="w-16 h-1 rounded-full bg-gradient-to-r from-[#34b29c] to-[#d2001a]"></div>
+      </div>
+
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#34b29c] pulse-glow"></span>
+        <div class="text-xs tracking-[0.35em] opacity-70">SHOP</div>
+        <span class="w-2 h-2 rounded-full bg-[#d2001a] pulse-glow" style="animation-delay: 1.5s;"></span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-alt leading-tight mb-6">
+        The <span class="text-gradient">Meta Store</span> lives on a separate site.
+      </h1>
+
+      <p class="mt-5 text-white/75 leading-relaxed max-w-[60ch] mx-auto text-lg">
+        You're about to open our online store in a new tab. If nothing happens automatically, use the button below.
       </p>
 
-      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-        <a id="storeBtn" class="btn w-full sm:w-auto" href="https://www.doxadeo.org/store/metamorpho/" target="_blank" rel="noopener">
+      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center stagger-children" id="buttonGroup">
+        <a id="storeBtn" class="btn magnetic" href="https://www.doxadeo.org/store/metamorpho/" target="_blank" rel="noopener">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
           Open Store
         </a>
-        <a class="btn w-full sm:w-auto" href="/index.html">
+        <a class="btn btn-secondary magnetic" href="/index.html">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
           Back to Home
         </a>
       </div>
 
-      <div class="mt-7 text-xs text-white/55">
-        Redirecting in <span id="countdown">5</span> seconds…
-        <button id="cancel" class="underline hover:opacity-100 opacity-80 ml-2" type="button">Cancel</button>
+      <div class="mt-8 flex items-center justify-center gap-2 text-xs text-white/55" id="countdownContainer">
+        <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span>Redirecting in <span id="countdown" class="countdown-pulse font-bold text-white/80">5</span> seconds…</span>
+        <button id="cancel" class="cancel-btn ml-3 text-white/70 hover:text-[#d2001a]" type="button">
+          Cancel
+        </button>
       </div>
 
-      <div class="mt-8 divider"></div>
+      <div class="mt-10 divider"></div>
 
+      <!-- Additional info -->
+      <div class="mt-8 flex items-center justify-center gap-6 text-xs text-white/40">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          <span>Secure connection</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+          <span>Opens in new tab</span>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="px-6 md:px-12 pb-10">
+  <footer class="px-6 md:px-12 pb-10 reveal">
     <div class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 magnetic">
         <img src="/assets/images/meta.logo.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
         <div class="text-xs tracking-widest opacity-70">METAMORPHO</div>
       </div>
@@ -147,46 +569,104 @@
   </footer>
 
   <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+    // Year update
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-  const STORE_URL = "https://www.doxadeo.org/store/metamorpho/";
-  const storeBtn = document.getElementById("storeBtn");
-  const countdown = document.getElementById("countdown");
-  const cancelBtn = document.getElementById("cancel");
+    // Reveal animation on load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.reveal, .reveal-scale').forEach(el => {
+        el.classList.add('active');
+      });
+    });
 
-  storeBtn.href = STORE_URL;
+    // Magnetic hover effect
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+      });
+      
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'translate(0, 0)';
+      });
+    });
 
-  let seconds = 5;
-  let timer = null;
-  let cancelled = false;
-
-  function tick() {
-    countdown.textContent = String(seconds);
-
-    if (seconds <= 0) {
-      clearInterval(timer);
-      timer = null;
-
-      if (!cancelled) {
-      window.location.href = STORE_URL;
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      
+      if (currentScroll > 100) {
+        navbar.classList.add('glass-strong');
+        navbar.style.padding = '0.75rem 1.5rem';
+      } else {
+        navbar.classList.remove('glass-strong');
+        navbar.style.padding = '';
       }
-      return;
+    }, { passive: true });
+
+    // Countdown and redirect functionality
+    const STORE_URL = "https://www.doxadeo.org/store/metamorpho/";
+    const storeBtn = document.getElementById("storeBtn");
+    const countdown = document.getElementById("countdown");
+    const countdownContainer = document.getElementById("countdownContainer");
+    const cancelBtn = document.getElementById("cancel");
+
+    storeBtn.href = STORE_URL;
+
+    let seconds = 5;
+    let timer = null;
+    let cancelled = false;
+
+    function tick() {
+      countdown.textContent = String(seconds);
+
+      if (seconds <= 0) {
+        clearInterval(timer);
+        timer = null;
+
+        if (!cancelled) {
+          window.location.href = STORE_URL;
+        }
+        return;
+      }
+
+      seconds -= 1;
     }
 
-    seconds -= 1;
-  }
+    tick();
+    timer = setInterval(tick, 1000);
 
-  tick();
-  timer = setInterval(tick, 1000);
+    cancelBtn.addEventListener("click", () => {
+      cancelled = true;
+      if (timer) clearInterval(timer);
+      timer = null;
 
-  cancelBtn.addEventListener("click", () => {
-    cancelled = true;
-    if (timer) clearInterval(timer);
-    timer = null;
+      countdownContainer.innerHTML = `
+        <div class="cancelled-state rounded-full px-4 py-2 flex items-center gap-2">
+          <svg class="w-4 h-4 text-[#d2001a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <span class="text-white/80">Redirect cancelled</span>
+        </div>
+      `;
+    });
 
-    cancelBtn.parentElement.innerHTML =
-      '<span class="text-xs text-white/55">Redirect cancelled.</span>';
-  });
-</script>
+    // Progress bar for visual feedback
+    const progressBar = document.getElementById('progressBar');
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      if (cancelled || progress >= 100) {
+        clearInterval(progressInterval);
+        return;
+      }
+      progress += 20; // 5 seconds = 100%, so 20% per second
+      progressBar.style.transform = `scaleX(${progress / 100})`;
+    }, 1000);
+  </script>
 </body>
 </html>

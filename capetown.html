@@ -73,22 +73,115 @@
       overflow: visible;
     }
 
-    /* ---- Base glass ---- */
+    /* ================= ENHANCED GLASS EFFECTS ================= */
+    
+    /* Base glass with multi-layer depth */
     .glass {
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-    }
-
-    /* ---- Stage (invisible wrapper) ---- */
-    .pill-stage {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 30px 80px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
       position: relative;
-      width: 100%;
-      max-width: 1200px;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Glass shine effect */
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+      transition: left 0.7s ease;
+      pointer-events: none;
+    }
+
+    .glass:hover::before {
+      left: 100%;
+    }
+
+    .glass:hover {
+      border-color: rgba(52, 178, 156, 0.3);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.25),
+        0 40px 100px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    /* Heavy shadow variant */
+    .glass.heavy-shadow {
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 50px 120px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* ================= SCROLL ANIMATIONS ================= */
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-80px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(80px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+    .stagger-5 { transition-delay: 0.5s; }
+    .stagger-6 { transition-delay: 0.6s; }
+
+    /* ================= ADMISSION BUTTONS ================= */
     .admission-btn {
       position: relative;
       display: inline-flex;
@@ -101,34 +194,55 @@
       font-size: 12px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-
-      border: 1px solid rgba(255, 255, 255, 0.16);
-
+      border: 1px solid rgba(255, 255, 255, 0.2);
       background: linear-gradient(120deg, #34b29c, #d2001a);
-
       background-size: 300% 100%;
-
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-
-      transition:
-        transform .22s ease,
-        background-position .45s ease,
-        box-shadow .22s ease;
-
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+      position: relative;
+    }
+
+    .admission-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .admission-btn:hover::before {
+      transform: translateX(100%);
     }
 
     .admission-btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       background-position: 100% 50%;
-      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 20px 40px rgba(52, 178, 156, 0.3);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
-    html {
-      scroll-behavior: smooth;
+    /* Special date button */
+    .admission-btn.special-date {
+      background: linear-gradient(120deg, 
+        rgba(255, 255, 255, 0.15), 
+        rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
+    .admission-btn.special-date:hover {
+      background: linear-gradient(120deg, 
+        rgba(255, 255, 255, 0.2), 
+        rgba(255, 255, 255, 0.1));
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ================= TEAM CAROUSEL ================= */
     .team-stage {
       perspective: 1200px;
       overflow: visible;
@@ -137,7 +251,6 @@
     #teamDeck {
       position: relative;
       height: 760px;
-      /* gives room for expanded hovered card */
       overflow: visible;
     }
 
@@ -150,14 +263,31 @@
       height: 520px;
       border-radius: 28px;
       overflow: hidden;
-      transition:
-        transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1),
-        opacity 520ms ease,
-        filter 520ms ease,
-        height 420ms cubic-bezier(0.2, 0.9, 0.2, 1),
-        width 420ms cubic-bezier(0.2, 0.9, 0.2, 1),
-        box-shadow 420ms ease;
+      transition: all 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
       will-change: transform, opacity, filter, height, width;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .team-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, 
+        rgba(52, 178, 156, 0.1) 0%, 
+        transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .team-card:hover::before {
+      opacity: 1;
     }
 
     .team-photo {
@@ -168,17 +298,22 @@
       object-fit: cover;
       object-position: center 15%;
       transform: scale(1.03);
-      transition: transform 420ms ease;
+      transition: transform 600ms ease;
     }
 
     .team-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(to top,
-          rgba(0, 0, 0, 0.82) 0%,
-          rgba(0, 0, 0, 0.48) 42%,
-          rgba(0, 0, 0, 0.10) 68%,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.5) 42%,
+          rgba(0, 0, 0, 0.1) 68%,
           rgba(0, 0, 0, 0.0) 100%);
+      transition: opacity 0.4s ease;
+    }
+
+    .team-card:hover .team-overlay {
+      opacity: 0.9;
     }
 
     .team-meta {
@@ -198,28 +333,28 @@
       opacity: 0;
       overflow: hidden;
       transform: translateY(10px);
-      transition:
-        max-height 420ms ease,
-        opacity 280ms ease,
-        transform 280ms ease;
-      color: rgba(255, 255, 255, 0.82);
+      transition: all 420ms ease;
+      color: rgba(255, 255, 255, 0.9);
       font-size: 14px;
-      line-height: 1.55;
+      line-height: 1.6;
       margin-top: 10px;
       padding-right: 6px;
     }
 
-    /* only let the FRONT card expand */
+    /* Front card hover expansion */
     .team-card[data-pos="0"]:hover {
       height: 690px;
       width: min(560px, 90vw);
       transform: translateX(calc(-50% + 24px)) translateY(0px) scale(1.02);
       z-index: 60;
-      box-shadow: 0 45px 120px rgba(0, 0, 0, 0.55);
+      box-shadow: 
+        0 45px 120px rgba(0, 0, 0, 0.55),
+        0 0 60px rgba(52, 178, 156, 0.15);
+      border-color: rgba(52, 178, 156, 0.3);
     }
 
     .team-card[data-pos="0"]:hover .team-photo {
-      transform: scale(1.06);
+      transform: scale(1.08);
     }
 
     .team-card[data-pos="0"]:hover .team-meta {
@@ -232,7 +367,7 @@
       transform: translateY(0);
     }
 
-    /* existing positions */
+    /* Carousel positions */
     .team-card[data-pos="0"] {
       opacity: 1;
       filter: blur(0px);
@@ -284,6 +419,12 @@
       place-items: center;
       cursor: pointer;
       user-select: none;
+      transition: all 0.3s ease;
+    }
+
+    .team-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
     /* ================= FEES SECTION ================= */
@@ -297,9 +438,9 @@
       inset: -1px;
       pointer-events: none;
       background:
-        radial-gradient(1200px 600px at 50% 10%, rgba(255, 255, 255, 0.06), transparent 60%),
-        radial-gradient(900px 600px at 20% 70%, rgba(255, 255, 255, 0.04), transparent 60%),
-        radial-gradient(900px 600px at 80% 70%, rgba(255, 255, 255, 0.04), transparent 60%);
+        radial-gradient(1200px 600px at 50% 10%, rgba(52, 178, 156, 0.08), transparent 60%),
+        radial-gradient(900px 600px at 20% 70%, rgba(52, 178, 156, 0.05), transparent 60%),
+        radial-gradient(900px 600px at 80% 70%, rgba(52, 178, 156, 0.05), transparent 60%);
       z-index: 0;
     }
 
@@ -320,30 +461,58 @@
       font-size: clamp(56px, 10vw, 120px);
       line-height: 0.9;
       letter-spacing: -0.02em;
-      color: #34b29c;
+      background: linear-gradient(135deg, #34b29c 0%, #2a9d8a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-shadow:
-        0 0 40px rgba(52, 178, 156, 0.25),
-        0 20px 100px rgba(52, 178, 156, 0.35),
-        0 40px 160px rgba(52, 178, 156, 0.22);
+        0 0 40px rgba(52, 178, 156, 0.3),
+        0 20px 100px rgba(52, 178, 156, 0.4),
+        0 40px 160px rgba(52, 178, 156, 0.25);
+      transition: transform 0.3s ease;
+    }
+
+    .big-blur-title h2:hover {
+      transform: scale(1.02);
     }
 
     .price-card {
+      display: flex;
       border-radius: 26px;
       padding: 26px;
-      transition: transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1),
-        box-shadow 260ms ease,
-        border-color 260ms ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
       position: relative;
       min-height: 520px;
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .price-card-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .price-card-content .cta {
+      margin-top: auto;
     }
 
     .price-card:hover {
-      transform: translateY(-10px);
-      border-color: rgba(52, 178, 156, 0.45);
+      transform: translateY(-15px) scale(1.02);
+      border-color: rgba(52, 178, 156, 0.4);
       box-shadow:
-        0 50px 120px rgba(0, 0, 0, 0.70),
-        0 0 60px rgba(52, 178, 156, 0.18);
+        0 50px 120px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(52, 178, 156, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
 
     .price-card::before {
@@ -351,20 +520,32 @@
       position: absolute;
       inset: -2px;
       background:
-        radial-gradient(420px 220px at 30% 10%, rgba(52, 178, 156, 0.28), transparent 60%),
-        radial-gradient(520px 260px at 70% 90%, rgba(52, 178, 156, 0.18), transparent 70%);
+        radial-gradient(420px 220px at 30% 10%, rgba(52, 178, 156, 0.3), transparent 60%),
+        radial-gradient(520px 260px at 70% 90%, rgba(52, 178, 156, 0.2), transparent 70%);
       pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.4s ease;
+    }
+
+    .price-card:hover::before {
+      opacity: 1;
     }
 
     .tick {
-      width: 22px;
-      height: 22px;
-      border-radius: 9999px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(52, 178, 156, 0.2);
+      border: 1px solid rgba(52, 178, 156, 0.4);
       flex: 0 0 auto;
+      transition: all 0.3s ease;
+    }
+
+    .price-card:hover .tick {
+      background: rgba(52, 178, 156, 0.3);
+      transform: scale(1.1);
     }
 
     .cta {
@@ -377,67 +558,178 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      transition: transform 180ms ease, opacity 180ms ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .cta:hover::before {
+      left: 100%;
     }
 
     .cta:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
 
-    /* ===== Button palette ===== */
+    /* Button palette */
     .btn-teal {
       background: #34b29c;
       color: #081015;
       border: 1px solid #34b29c;
-      transition: all 300ms ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-teal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-teal:hover::before {
+      left: 100%;
     }
 
     .btn-teal:hover {
       background: transparent;
       color: #34b29c;
       border: 1px solid #34b29c;
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(52, 178, 156, 0.3);
     }
 
     .btn-teal-inverse {
       background: transparent;
       color: #34b29c;
       border: 1px solid #34b29c;
-      transition: all 300ms ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-teal-inverse::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(52, 178, 156, 0.2), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-teal-inverse:hover::before {
+      left: 100%;
     }
 
     .btn-teal-inverse:hover {
       background: #34b29c;
       color: #081015;
       border: 1px solid #34b29c;
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(52, 178, 156, 0.3);
     }
 
-    /* Big prices color */
     .price-big {
-      color: #34b29c;
+      background: linear-gradient(135deg, #34b29c 0%, #2a9d8a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
+    /* Camp video cards */
     .camp-video-card {
-      transition: transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 260ms ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .camp-video-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.4);
+      transform: translateY(-12px) scale(1.02);
+      border-color: rgba(52, 178, 156, 0.3);
+      box-shadow: 
+        0 35px 90px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(52, 178, 156, 0.1);
     }
 
+    .camp-video-card:hover h3 {
+      color: #34b29c;
+      transition: color 0.3s ease;
+    }
+
+    /* Hero background */
     .capetown-hero {
       position: fixed;
       inset: 0;
       z-index: -1;
-
       background-image: url("assets/images/capetown-hero.jpg");
       background-size: cover;
       background-position: center;
+      background-attachment: fixed;
       background-repeat: no-repeat;
-
       filter: brightness(0.4);
+      transition: transform 0.1s ease-out;
     }
 
+    /* Step cards enhancement */
+    .step-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #34b29c, transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .step-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(52, 178, 156, 0.3);
+    }
+
+    .step-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* Responsive */
     @media (max-width: 1023px) {
       .team-card[data-pos="1"] {
         transform: translateX(calc(-50% + 180px)) translateY(16px) scale(0.84) rotateY(-14deg);
@@ -545,63 +837,358 @@
         white-space: normal;
       }
     }
+
+    /* Dot indicators */
+    #teamDots button {
+      transition: all 0.3s ease;
+    }
+
+    #teamDots button:hover {
+      transform: scale(1.3);
+    }
+
+    #teamDots button.active {
+      background: #34b29c;
+      transform: scale(1.2);
+    }
+    /* ===== ABOUT PAGE THEME OVERRIDES ===== */
+    :root {
+      --meta-teal: #34b29c;
+      --meta-red: #d2001a;
+      --meta-dark: #0B1722;
+    }
+
+    body {
+      background: var(--meta-dark);
+    }
+
+    .glass {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .glass::before {
+      inset: 0;
+      top: auto;
+      left: auto;
+      width: auto;
+      height: auto;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .glass-strong {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+    }
+
+    .glass:hover::before {
+      left: auto;
+      opacity: 1;
+    }
+
+    .glass:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(52, 178, 156, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ambient-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: ambientFloat 15s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--meta-teal);
+      top: 10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--meta-red);
+      bottom: 20%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #fff;
+      top: 50%;
+      left: 50%;
+      animation-delay: -10s;
+      opacity: 0.08;
+    }
+
+    @keyframes ambientFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.9); }
+      75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    @keyframes bgZoom {
+      0% { transform: scale(1.1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1%, -1%); }
+    }
+
+    .capetown-hero {
+      filter: brightness(0.35) contrast(1.1);
+      transform: scale(1.1);
+      animation: bgZoom 20s ease-in-out infinite alternate;
+    }
+
+    .capetown-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(11, 23, 34, 0.6) 100%);
+      pointer-events: none;
+    }
+
+    .admission-btn,
+    .cta,
+    .btn-teal {
+      background: linear-gradient(120deg, var(--meta-teal), var(--meta-red));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.22);
+      color: #fff;
+    }
+
+    .admission-btn:hover,
+    .cta:hover,
+    .btn-teal:hover {
+      background-position: 100% 0;
+      box-shadow:
+        0 20px 40px rgba(52, 178, 156, 0.3),
+        0 0 60px rgba(52, 178, 156, 0.1);
+    }
+
+    .admission-btn.special-date,
+    .btn-teal-inverse {
+      background: linear-gradient(120deg,
+        rgba(255, 255, 255, 0.15),
+        rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      color: #fff;
+    }
+
+    .admission-btn.special-date:hover,
+    .btn-teal-inverse:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-pill {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* ===== NAV LINKS ===== */
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* Mobile nav */
+    #mobileMenu {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mobileMenu.open {
+      max-height: 520px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
   </style>
 </head>
 
 <body class="overflow-x-hidden">
-
-  <div class="capetown-hero"></div>
-
-  <nav class="fixed top-0 w-full z-50 flex items-center justify-between px-6 md:px-10 py-5 md:py-6">
-    <a href="index.html" class="flex items-center gap-3">
-      <img src="/assets/images/meta.logo.png" class="h-12" alt="Meta logo" />
-      <span class="hidden sm:block text-sm tracking-widest opacity-80">BACK HOME</span>
+  <!--NAV-->
+  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
+    <a href="/index.html" class="flex items-center gap-3 magnetic group">
+      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
+      <span class="hidden md:block text-xs tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">BACK HOME</span>
     </a>
 
-    <div class="max-w-[11rem] text-right text-[11px] sm:text-sm tracking-[0.24em] sm:tracking-widest opacity-80">CAPE TOWN CAMPUS</div>
+    <!-- Desktop nav -->
+    <div class="hidden md:block nav-pill rounded-full px-10 py-4 shadow-lg">
+      <ul class="flex gap-8 text-sm tracking-wider items-center">
+        <li><a class="nav-link" href="index.html">HOME</a></li>
+        <li><a class="nav-link" href="about.html">ABOUT</a></li>
+        <li><a class="nav-link" href="gallery.html">GALLERY</a></li>
+        <li><a class="nav-link" href="metaventures.html">METAVENTURES</a></li>
+        <li><a class="nav-link" href="shop.html">SHOP</a></li>
+        <li><a class="nav-link" href="contact.html">CONTACT</a></li>
+        <li><a class="nav-link" href="faq.html">FAQ</a></li>
+        <li><a class="nav-link" href="market.html">MARKET</a></li>
+      </ul>
+    </div>
+
+    <!-- Mobile menu button -->
+    <button id="menuBtn" class="md:hidden glass rounded-full px-4 py-2 text-sm tracking-widest" aria-expanded="false"
+      aria-controls="mobileMenu">
+      MENU
+    </button>
   </nav>
 
-  <!-- 1) TITLE PAGE -->
-  <section class="min-h-screen flex items-center justify-center px-6 md:px-10 pt-28">
+  <!-- Mobile nav panel -->
+  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4">
+    <ul class="grid gap-2 text-sm tracking-wider">
+      <li><a class="navlink block" href="index.html">HOME</a></li>
+      <li><a class="navlink block" href="about.html">ABOUT</a></li>
+      <li><a class="navlink block" href="gallery.html">GALLERY</a></li>
+      <li><a class="navlink block" href="metaventures.html">METAVENTURES</a></li>
+      <li><a class="navlink block" href="shop.html">SHOP</a></li>
+      <li><a class="navlink block" href="contact.html">CONTACT</a></li>
+      <li><a class="navlink block" href="faq.html">FAQ</a></li>
+      <li><a class="navlink block" href="market.html">MARKET</a></li>
+    </ul>
+  </div>
+
+  <!--HERO-->
+  <div class="capetown-hero" id="heroBg"></div>
+
+  <div class="ambient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="min-h-screen flex items-center justify-center px-6 md:px-10 pt-28 relative">
     <div class="w-full max-w-[1200px] grid md:grid-cols-2 gap-10 items-center">
 
-      <div>
+      <div class="reveal-left">
         <h1 class="text-5xl md:text-7xl font-alt leading-tight">
           Cape Town<br />Campus
         </h1>
 
-        <p class="mt-6 text-lg text-white/75 leading-relaxed max-w-[52ch]">
+        <p class="mt-6 text-lg text-white/75 leading-relaxed max-w-[52ch] reveal-left stagger-1">
           The Cape Town Campus is based in Strand, Helderberg — a coastal environment ideal for students to build a
           healthy lifestyle. Students live within walking distance of the ocean, combining structured development with
           the challenge and calm of the sea.
         </p>
 
-        <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-6">
+        <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-6 reveal-left stagger-2">
           <a href="#enroll"
-            class="rounded-full px-8 sm:px-10 md:px-16 py-4 sm:py-5 md:py-8 text-base sm:text-lg md:text-2xl text-center font-alt transform hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(52,178,156,0.22)] btn-teal">
+            class="rounded-full px-8 sm:px-10 md:px-16 py-4 sm:py-5 md:py-8 text-base sm:text-lg md:text-2xl text-center font-alt btn-teal">
             Enroll
           </a>
 
           <a href="#fees"
-            class="rounded-full px-8 sm:px-10 md:px-16 py-4 sm:py-5 md:py-8 text-base sm:text-lg md:text-2xl text-center font-alt transform hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(52,178,156,0.22)] btn-teal-inverse">
+            class="rounded-full px-8 sm:px-10 md:px-16 py-4 sm:py-5 md:py-8 text-base sm:text-lg md:text-2xl text-center font-alt btn-teal-inverse">
             Fees
           </a>
         </div>
       </div>
 
-      <div class="glass heavy-shadow rounded-3xl overflow-hidden">
-        <img src="/assets/images/capetown-hero.jpg" alt="Cape Town campus" class="w-full h-[320px] sm:h-[420px] object-cover" />
+      <div class="glass heavy-shadow rounded-3xl overflow-hidden reveal-right stagger-1 group">
+        <img src="/assets/images/capetown-hero.jpg" alt="Cape Town campus" class="w-full h-[320px] sm:h-[420px] object-cover transition-transform duration-700 group-hover:scale-105" />
       </div>
 
     </div>
   </section>
 
-  <!-- ENROLL -->
-  <section id="enroll" class="px-6 md:px-10 py-20">
+  <!-- ENROLL SECTION -->
+  <section id="enroll" class="px-6 md:px-10 py-20 relative z-10">
     <div class="w-full max-w-[1200px] mx-auto">
 
-      <h2 class="text-5xl font-alt mb-6">Enroll</h2>
-      <p class="text-white/75 text-lg leading-relaxed max-w-[70ch] mb-10">
+      <h2 class="text-5xl font-alt mb-6 reveal">Enroll</h2>
+      <p class="text-white/75 text-lg leading-relaxed max-w-[70ch] mb-10 reveal stagger-1">
         How it works: Choose an Admission Day, register on ChurchSuite, and attend. Admission Day attendance is
         compulsory —
         that is where the interview will take place.
@@ -609,20 +1196,20 @@
 
       <!-- Steps -->
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-        <div class="glass rounded-3xl p-6 min-h-[140px]">
-          <div class="text-sm tracking-widest opacity-70">STEP 1</div>
+        <div class="glass step-card rounded-3xl p-6 min-h-[140px] reveal stagger-1">
+          <div class="text-sm tracking-widest opacity-70 text-[#34b29c]">STEP 1</div>
           <div class="text-xl font-alt mt-2">Choose a day</div>
         </div>
-        <div class="glass rounded-3xl p-6 min-h-[140px]">
-          <div class="text-sm tracking-widest opacity-70">STEP 2</div>
+        <div class="glass step-card rounded-3xl p-6 min-h-[140px] reveal stagger-2">
+          <div class="text-sm tracking-widest opacity-70 text-[#34b29c]">STEP 2</div>
           <div class="text-xl font-alt mt-2">Register</div>
         </div>
-        <div class="glass rounded-3xl p-6 min-h-[140px]">
-          <div class="text-sm tracking-widest opacity-70">STEP 3</div>
+        <div class="glass step-card rounded-3xl p-6 min-h-[140px] reveal stagger-3">
+          <div class="text-sm tracking-widest opacity-70 text-[#34b29c]">STEP 3</div>
           <div class="text-xl font-alt mt-2">Attend</div>
         </div>
-        <div class="glass rounded-3xl p-6 min-h-[140px]">
-          <div class="text-sm tracking-widest opacity-70">STEP 4</div>
+        <div class="glass step-card rounded-3xl p-6 min-h-[140px] reveal stagger-4">
+          <div class="text-sm tracking-widest opacity-70 text-[#34b29c]">STEP 4</div>
           <div class="text-xl font-alt mt-2">Next Steps</div>
         </div>
       </div>
@@ -630,47 +1217,47 @@
       <!-- Date buttons -->
       <div class="flex flex-wrap justify-center gap-4 md:gap-5 mb-12">
         <a href="https://doxadeobb.churchsuite.com/events/gzekbzyx" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale stagger-1">
           Fri 17 Apr 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/am48uknx" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale stagger-2">
           Fri 15 May 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/xttfk95n" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale stagger-3">
           Fri 19 Jun 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/lowvjvxt" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale stagger-4">
           Fri 17 Jul 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/uzpo4qcz" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale stagger-5">
           Fri 14 Aug 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/ow82ssko" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale stagger-6">
           Fri 25 Sep 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/coil2wxh" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale">
           Fri 23 Oct 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/tluzi3x6" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale">
           Fri 20 Nov 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/imwirejp" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale">
           Fri 04 Dec 2026 · 14:30
         </a>
         <a href="https://doxadeobb.churchsuite.com/events/jxl7sotd" target="_blank" rel="noopener"
-          class="admission-btn">
+          class="admission-btn reveal-scale">
           Fri 11 Dec 2026 · 14:30
         </a>
         <a href="mailto:metamorphocpt@doxadeo.org?subject=Metamorpho%20Personal%20Interview%20Request&body=Hi%20Meta%20Team,%0A%0AI%20cannot%20attend%20the%20scheduled%20Admission%20Days%20and%20would%20like%20to%20request%20a%20personal%20interview.%0A%0AName:%0ACity:%0APhone:%0A%0AThank%20you."
-          class="admission-btn special-date">
+          class="admission-btn special-date reveal-scale">
           Can't make these dates? Request a one-on-one
         </a>
       </div>
@@ -678,13 +1265,13 @@
     </div>
   </section>
 
-  <!--CAMP VIDEOS-->
-  <section id="camp-videos" class="px-6 md:px-10 py-20 md:py-24">
+  <!-- CAMP VIDEOS SECTION -->
+  <section id="camp-videos" class="px-6 md:px-10 py-20 md:py-24 relative z-10">
     <div class="w-full max-w-[1400px] mx-auto">
 
-      <div class="text-center mb-14">
+      <div class="text-center mb-14 reveal">
         <h2 class="text-5xl md:text-6xl font-alt">See the Camps in Action</h2>
-        <p class="text-white/70 text-lg mt-4 max-w-[750px] mx-auto leading-relaxed">
+        <p class="text-white/70 text-lg mt-4 max-w-[750px] mx-auto leading-relaxed reveal stagger-1">
           Every camp carries its own challenge, atmosphere, and purpose. Explore each one below. (videos under development, coming very soon)
         </p>
       </div>
@@ -692,12 +1279,12 @@
       <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
 
         <!-- 1 -->
-        <div class="glass camp-video-card rounded-[30px] p-5 border border-white/15">
+        <div class="glass camp-video-card rounded-[30px] p-5 reveal stagger-1">
           <div class="mb-4">
-            <div class="text-xs tracking-[0.28em] uppercase text-white/50 mb-2">Camp 01</div>
-            <h3 class="text-2xl font-alt">Orientation</h3>
+            <div class="text-xs tracking-[0.28em] uppercase text-[#34b29c] mb-2">Camp 01</div>
+            <h3 class="text-2xl font-alt transition-colors">Orientation</h3>
           </div>
-          <div class="aspect-video rounded-[22px] overflow-hidden">
+          <div class="aspect-video rounded-[22px] overflow-hidden glass">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_1" title="Orientation Camp"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -707,12 +1294,12 @@
         </div>
 
         <!-- 2 -->
-        <div class="glass camp-video-card rounded-[30px] p-5 border border-white/15">
+        <div class="glass camp-video-card rounded-[30px] p-5 reveal stagger-2">
           <div class="mb-4">
-            <div class="text-xs tracking-[0.28em] uppercase text-white/50 mb-2">Camp 02</div>
-            <h3 class="text-2xl font-alt">Gung Ho</h3>
+            <div class="text-xs tracking-[0.28em] uppercase text-[#34b29c] mb-2">Camp 02</div>
+            <h3 class="text-2xl font-alt transition-colors">Gung Ho</h3>
           </div>
-          <div class="aspect-video rounded-[22px] overflow-hidden">
+          <div class="aspect-video rounded-[22px] overflow-hidden glass">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_2" title="Gung Ho Camp"
               frameborder="0" allowfullscreen>
             </iframe>
@@ -720,12 +1307,12 @@
         </div>
 
         <!-- 3 -->
-        <div class="glass camp-video-card rounded-[30px] p-5 border border-white/15">
+        <div class="glass camp-video-card rounded-[30px] p-5 reveal stagger-3">
           <div class="mb-4">
-            <div class="text-xs tracking-[0.28em] uppercase text-white/50 mb-2">Camp 03</div>
-            <h3 class="text-2xl font-alt">Hiking Trail</h3>
+            <div class="text-xs tracking-[0.28em] uppercase text-[#34b29c] mb-2">Camp 03</div>
+            <h3 class="text-2xl font-alt transition-colors">Hiking Trail</h3>
           </div>
-          <div class="aspect-video rounded-[22px] overflow-hidden">
+          <div class="aspect-video rounded-[22px] overflow-hidden glass">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_3" title="Hiking Trail Camp"
               frameborder="0" allowfullscreen>
             </iframe>
@@ -733,12 +1320,12 @@
         </div>
 
         <!-- 4 -->
-        <div class="glass camp-video-card rounded-[30px] p-5 border border-white/15">
+        <div class="glass camp-video-card rounded-[30px] p-5 reveal stagger-4">
           <div class="mb-4">
-            <div class="text-xs tracking-[0.28em] uppercase text-white/50 mb-2">Camp 04</div>
-            <h3 class="text-2xl font-alt">High Ropes</h3>
+            <div class="text-xs tracking-[0.28em] uppercase text-[#34b29c] mb-2">Camp 04</div>
+            <h3 class="text-2xl font-alt transition-colors">High Ropes</h3>
           </div>
-          <div class="aspect-video rounded-[22px] overflow-hidden">
+          <div class="aspect-video rounded-[22px] overflow-hidden glass">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_4" title="High Ropes Camp"
               frameborder="0" allowfullscreen>
             </iframe>
@@ -746,12 +1333,12 @@
         </div>
 
         <!-- 5 -->
-        <div class="glass camp-video-card rounded-[30px] p-5 border border-white/15">
+        <div class="glass camp-video-card rounded-[30px] p-5 reveal stagger-5">
           <div class="mb-4">
-            <div class="text-xs tracking-[0.28em] uppercase text-white/50 mb-2">Camp 05</div>
-            <h3 class="text-2xl font-alt">Worldview</h3>
+            <div class="text-xs tracking-[0.28em] uppercase text-[#34b29c] mb-2">Camp 05</div>
+            <h3 class="text-2xl font-alt transition-colors">Worldview</h3>
           </div>
-          <div class="aspect-video rounded-[22px] overflow-hidden">
+          <div class="aspect-video rounded-[22px] overflow-hidden glass">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_5" title="Worldview Camp"
               frameborder="0" allowfullscreen>
             </iframe>
@@ -759,12 +1346,12 @@
         </div>
 
         <!-- 6 -->
-        <div class="glass camp-video-card rounded-[30px] p-5 border border-white/15">
+        <div class="glass camp-video-card rounded-[30px] p-5 reveal stagger-6">
           <div class="mb-4">
-            <div class="text-xs tracking-[0.28em] uppercase text-white/50 mb-2">Camp 06</div>
-            <h3 class="text-2xl font-alt">Outreach</h3>
+            <div class="text-xs tracking-[0.28em] uppercase text-[#34b29c] mb-2">Camp 06</div>
+            <h3 class="text-2xl font-alt transition-colors">Outreach</h3>
           </div>
-          <div class="aspect-video rounded-[22px] overflow-hidden">
+          <div class="aspect-video rounded-[22px] overflow-hidden glass">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_6" title="Outreach Camp"
               frameborder="0" allowfullscreen>
             </iframe>
@@ -775,20 +1362,20 @@
     </div>
   </section>
 
-  <!-- TEAM -->
-  <section id="team" class="min-h-screen px-6 md:px-10 py-24 z-20 overflow-visible">
+  <!-- TEAM SECTION -->
+  <section id="team" class="min-h-screen px-6 md:px-10 py-24 z-20 overflow-visible relative">
     <div class="w-full max-w-[1200px] mx-auto">
 
-      <h2 class="text-4xl md:text-5xl font-alt mb-6">Meet the Team</h2>
-      <p class="text-white/75 max-w-[70ch] leading-relaxed mb-12 text-xl md:text-4xl">
+      <h2 class="text-4xl md:text-5xl font-alt mb-6 reveal">Meet the Team</h2>
+      <p class="text-white/75 max-w-[70ch] leading-relaxed mb-12 text-xl md:text-2xl reveal stagger-1">
         The leaders behind the mission.
       </p>
 
-      <div class="team-stage relative h-[600px]">
+      <div class="team-stage relative h-[600px] reveal-scale">
 
         <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between z-40 px-2">
-          <button id="teamPrev" class="glass team-btn" aria-label="Previous">‹</button>
-          <button id="teamNext" class="glass team-btn" aria-label="Next">›</button>
+          <button id="teamPrev" class="glass team-btn hover:border-[#34b29c]/50" aria-label="Previous">‹</button>
+          <button id="teamNext" class="glass team-btn hover:border-[#34b29c]/50" aria-label="Next">›</button>
         </div>
 
         <div id="teamDeck" class="relative h-[520px]">
@@ -797,7 +1384,7 @@
             <img class="team-photo" src="assets/images/innesnikita.jpeg" alt="Innes & Nikita" loading="lazy" decoding="async">
             <div class="team-overlay"></div>
             <div class="team-meta">
-              <div class="text-2xl font-alt">Innes & Nikita</div>
+              <div class="text-2xl font-alt text-[#34b29c]">Innes & Nikita</div>
               <div class="team-role">Metamorpho Campus Leaders</div>
               <div class="text-white/70 text-sm mt-2 max-w-[52ch]">
                 Leading the culture and direction of the campus.
@@ -816,7 +1403,7 @@
           <img class="team-photo" src="/assets/images/duncan.jpeg" alt="Duncan Du Preez" loading="lazy" decoding="async">
           <div class="team-overlay"></div>
           <div class="team-meta">
-            <div class="text-2xl font-alt">Duncan Du Preez</div>
+            <div class="text-2xl font-alt text-[#34b29c]">Duncan Du Preez</div>
             <div class="text-white/75">Navigator</div>
             <div class="text-white/70 text-sm mt-2 max-w-[52ch]">
               Pioneering the creative limits
@@ -835,7 +1422,7 @@
           <img class="team-photo" src="/assets/images/lizzard.jpeg" alt="Lizomé Krige" loading="lazy" decoding="async">
           <div class="team-overlay"></div>
           <div class="team-meta">
-            <div class="text-2xl font-alt">Lizomé Krige</div>
+            <div class="text-2xl font-alt text-[#34b29c]">Lizomé Krige</div>
             <div class="text-white/75">Navigator</div>
             <div class="text-white/70 text-sm mt-2 max-w-[52ch]">
               Leading with boldness and untamed joy
@@ -843,11 +1430,11 @@
 
             <div class="team-bio">
               Lizomé is a devout follower of God, with a heart for His purpose and glory. 
-              As a God-loving adventurer, she navigates life’s journey with faith, trusting in His guidance and provision. 
+              As a God-loving adventurer, she navigates life's journey with faith, trusting in His guidance and provision. 
               She approaches each day with a heart full of joy and a mind full of wonder. 
               Her strong will and unapologetic approach to life is rooted in her unwavering commitment to her faith. 
               You can expect honesty, transparency, and a healthy dose of humor. 
-              When she’s not exploring new horizons or pushing boundaries, you can find her seeking God’s presence and wisdom. 
+              When she's not exploring new horizons or pushing boundaries, you can find her seeking God's presence and wisdom. 
             </div>
           </div>
         </div>
@@ -856,7 +1443,7 @@
           <img class="team-photo" src="/assets/images/annika.jpeg" alt="Annika Van Eyk" loading="lazy" decoding="async">
           <div class="team-overlay"></div>
           <div class="team-meta">
-            <div class="text-2xl font-alt">Annika Van Eyk</div>
+            <div class="text-2xl font-alt text-[#34b29c]">Annika Van Eyk</div>
             <div class="text-white/75">Intern</div>
             <div class="text-white/70 text-sm mt-2 max-w-[52ch]">
              Helping others be an ambassador of the Kingdom
@@ -872,16 +1459,16 @@
 
       </div>
 
-      <div id="teamDots" class="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-40"></div>
+      <div id="teamDots" class="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-3 z-40"></div>
     </div>
 
     <div class="h-10"></div>
     </div>
   </section>
 
-  <!-- FEES -->
+  <!-- FEES SECTION -->
   <section id="fees" class="bg-transparent relative min-h-screen pt-40 pb-24 z-40 mt-16 overflow-visible">
-    <div class="big-blur-title">
+    <div class="big-blur-title reveal-scale">
       <h2>Fees</h2>
     </div>
 
@@ -889,26 +1476,26 @@
 
       <div class="mt-16 grid lg:grid-cols-3 gap-8">
 
-        <section class="glass price-card border border-white/15">
-          <div class="relative z-10">
-            <div class="text-white/70 tracking-widest text-sm">COURSE FEES</div>
+        <section class="glass price-card reveal stagger-1">
+          <div class="price-card-content">
+            <div class="text-[#34b29c] tracking-widest text-sm font-semibold">COURSE FEES</div>
             <div class="mt-2 text-5xl font-alt price-big">R47 000</div>
             <div class="text-white/70 mt-2">2026 • excludes accommodation</div>
 
             <div class="mt-8 space-y-4">
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
                 <div class="text-white/80">All classes & camps</div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
                 <div class="text-white/80">Notebook</div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
                 <div class="text-white/80">T-shirt</div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
                 <div class="text-white/80">USB with videos of the year</div>
               </div>
@@ -919,36 +1506,36 @@
               expected.
             </div>
 
-            <a href="#enroll" class="cta mt-10 bg-white text-black">Apply / Enroll</a>
+            <a href="#enroll" class="cta bg-white text-black hover:bg-[#34b29c] hover:text-white">Apply / Enroll</a>
           </div>
         </section>
 
-        <section class="glass price-card border border-white/15">
-          <div class="relative z-10">
-            <div class="text-white/70 tracking-widest text-sm">PAYMENT PLAN</div>
+        <section class="glass price-card reveal stagger-2">
+          <div class="price-card-content">
+            <div class="text-[#34b29c] tracking-widest text-sm font-semibold">PAYMENT PLAN</div>
             <div class="mt-2 text-5xl font-alt price-big">R4 000</div>
             <div class="text-white/70 mt-2">Registration fee</div>
 
             <div class="mt-8 space-y-4">
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
-                <div class="text-white/80">Pay <span class="text-white font-semibold">R4 000</span> two weeks after
+                <div class="text-white/80">Pay <span class="text-[#34b29c] font-semibold">R4 000</span> two weeks after
                   acceptance</div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
                 <div class="text-white/80">If the fee is not paid, student is placed on the <span
-                    class="text-white font-semibold">waiting list</span></div>
+                    class="text-[#34b29c] font-semibold">waiting list</span></div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
-                <div class="text-white/80">Remaining fees paid off in <span class="text-white font-semibold">10
+                <div class="text-white/80">Remaining fees paid off in <span class="text-[#34b29c] font-semibold">10
                     months</span> (Feb 1 → Nov 1)</div>
               </div>
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <div class="tick">✓</div>
-                <div class="text-white/80">Payment options: <span class="text-white font-semibold">Debit order</span> or
-                  <span class="text-white font-semibold">Once-off</span></div>
+                <div class="text-white/80">Payment options: <span class="text-[#34b29c] font-semibold">Debit order</span> or
+                  <span class="text-[#34b29c] font-semibold">Once-off</span></div>
               </div>
             </div>
 
@@ -957,130 +1544,143 @@
               and self-reliance.
             </div>
 
-            <a href="#enroll" class="cta mt-10 bg-white text-black">Start admission</a>
+            <a href="#enroll" class="cta bg-white text-black hover:bg-[#34b29c] hover:text-white">Start admission</a>
           </div>
         </section>
 
-        <section class="glass price-card border border-white/15">
-          <div class="relative z-10">
-            <div class="text-white/70 tracking-widest text-sm">ACCOMMODATION</div>
-            <div class="mt-2 text-5xl font-alt">Room Costs</div>
+        <section class="glass price-card reveal stagger-3">
+          <div class="price-card-content">
+            <div class="text-[#34b29c] tracking-widest text-sm font-semibold">ACCOMMODATION</div>
+            <div class="mt-2 text-5xl font-alt text-white">Room Costs</div>
             <div class="text-white/70 mt-2">10-month rental agreement + deposit</div>
 
             <div class="mt-8 space-y-4">
-              <div class="flex justify-between text-white/85"><span>2 Bed Room</span><span class="font-semibold">R4500 /
+              <div class="flex justify-between text-white/85 items-center"><span>2 Bed Room</span><span class="font-semibold text-[#34b29c]">R4500 /
                   month</span></div>
-              <div class="flex justify-between text-white/85"><span>3 Bed Room</span><span class="font-semibold">R4400 /
+              <div class="flex justify-between text-white/85 items-center"><span>3 Bed Room</span><span class="font-semibold text-[#34b29c]">R4400 /
                   month</span></div>
-              <div class="flex justify-between text-white/85"><span>4 Bed Room</span><span class="font-semibold">R4300 /
+              <div class="flex justify-between text-white/85 items-center"><span>4 Bed Room</span><span class="font-semibold text-[#34b29c]">R4300 /
                   month</span></div>
 
               <div class="pt-2 text-white/70 text-sm">No single rooms available.</div>
 
               <div class="pt-2 text-white/70 text-sm leading-relaxed">
-                <span class="text-white font-semibold">Deposit:</span> R1500(refundable after move-out if no damage).
+                <span class="text-[#34b29c] font-semibold">Deposit:</span> R1500(refundable after move-out if no damage).
                 <br />
-                <span class="text-white font-semibold">Accommodation allocation:</span> first come first served; room
+                <span class="text-[#34b29c] font-semibold">Accommodation allocation:</span> first come first served; room
                 size cannot be guaranteed.
               </div>
             </div>
 
-            <a href="contact.html" class="cta mt-10 bg-white text-black">Ask about rooms</a>
+            <a href="contact.html" class="cta bg-white text-black hover:bg-[#34b29c] hover:text-white">Ask about rooms</a>
           </div>
         </section>
 
       </div>
 
-      <section class="mt-14 glass rounded-3xl p-8 border border-white/15">
+      <section class="mt-14 glass rounded-3xl p-8 border border-white/15 reveal">
         <div class="grid lg:grid-cols-2 gap-10">
 
           <div>
-            <div class="text-white/70 tracking-widest text-sm">EXCLUDED FROM FEES</div>
-            <ul class="mt-5 space-y-3 text-white/80 leading-relaxed">
-              <li>• End-of-year camp (± R4000) — savings project for students during the year</li>
-              <li>• Equipment and food for the Hiking Trail</li>
-              <li>• Metamorpho online shop items (optional)</li>
-              <li>• Contributions for two Changeroom weekends (planned & executed by students as a group)</li>
+            <div class="text-[#34b29c] tracking-widest text-sm font-semibold mb-4">EXCLUDED FROM FEES</div>
+            <ul class="space-y-3 text-white/80 leading-relaxed">
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>End-of-year camp (± R4000) — savings project for students during the year</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Equipment and food for the Hiking Trail</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Metamorpho online shop items (optional)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Contributions for two Changeroom weekends (planned & executed by students as a group)</span>
+              </li>
             </ul>
           </div>
 
           <div>
-            <div class="text-white/70 tracking-widest text-sm">COSTS INCLUDE</div>
-            <ul class="mt-5 space-y-3 text-white/80 leading-relaxed">
-              <li>• Fully furnished house (bed & mattress, cupboard, curtains, fridges, freezers, microwaves)</li>
-              <li>• Pots, pans, vacuum cleaner, washing machine</li>
-              <li>• Cleaning products for the house</li>
-              <li>• Water and electricity use</li>
+            <div class="text-[#34b29c] tracking-widest text-sm font-semibold mb-4">COSTS INCLUDE</div>
+            <ul class="space-y-3 text-white/80 leading-relaxed">
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Fully furnished house (bed & mattress, cupboard, curtains, fridges, freezers, microwaves)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Pots, pans, vacuum cleaner, washing machine</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Cleaning products for the house</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-[#34b29c] mt-1">•</span>
+                <span>Water and electricity use</span>
+              </li>
             </ul>
           </div>
 
         </div>
       </section>
 
-      <section class="mt-14 glass rounded-3xl p-8 border border-white/15">
-        <div class="grid lg:grid-cols-2 gap-10">
-
-          <div>
-            <div class="text-white/70 tracking-widest text-sm">BANKING DETAILS</div>
-            <ul class="mt-5 space-y-3 text-white/80 leading-relaxed">
-              <li>• DOXA DEO METAMORPHO</li>
-              <li>• ABSA Bank</li>
-              <li>• Account no: 405 121 6674</li>
-              <li>• Branch No: 632005</li>
-              <li>• Reference: Student name + for what (eg John Smith Registration Fee 2026)</li>
-              <li><strong>• NB! Proof of payments must be sent to our debtors department at debtors@doxadeo.org as well as metamorpho@doxadeo.org</strong></li>
-            </ul>
-          </div>
-
+      <section class="mt-14 glass rounded-3xl p-8 border border-white/15 reveal">
+        <div class="max-w-2xl mx-auto text-center">
+          <div class="text-[#34b29c] tracking-widest text-sm font-semibold mb-6">BANKING DETAILS</div>
+          <ul class="space-y-3 text-white/80 leading-relaxed text-left inline-block">
+            <li class="flex justify-between gap-8">
+              <span class="text-white/60">Account Name:</span>
+              <span class="font-semibold">DOXA DEO METAMORPHO</span>
+            </li>
+            <li class="flex justify-between gap-8">
+              <span class="text-white/60">Bank:</span>
+              <span>ABSA Bank</span>
+            </li>
+            <li class="flex justify-between gap-8">
+              <span class="text-white/60">Account No:</span>
+              <span class="font-mono">405 121 6674</span>
+            </li>
+            <li class="flex justify-between gap-8">
+              <span class="text-white/60">Branch No:</span>
+              <span class="font-mono">632005</span>
+            </li>
+            <li class="text-sm text-white/60 mt-4 pt-4 border-t border-white/10">
+              Reference: Student name + for what (eg John Smith Registration Fee 2026)
+            </li>
+            <li class="text-sm text-[#34b29c] mt-2">
+              <strong>NB!</strong> Proof of payments must be sent to debtors@doxadeo.org and metamorpho@doxadeo.org
+            </li>
+          </ul>
         </div>
       </section>
-
 
     </div>
   </section>
 
-  <!-- Scripts -->
   <script>
-    const stage = document.getElementById("pillStage");
-    const apply = document.getElementById("applyPill");
-    const chev = document.getElementById("applyChev");
-    const origin = document.getElementById("bubbleOrigin");
+    // ================= SCROLL OBSERVER =================
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-    let open = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
 
-    function setOriginAtApplyCenter() {
-      const a = apply.getBoundingClientRect();
-      const s = stage.getBoundingClientRect();
-
-      const cx = (a.left - s.left) + a.width / 2;
-      const cy = (a.top - s.top) + a.height / 2;
-
-      origin.style.left = cx + "px";
-      origin.style.top = cy + "px";
-    }
-
-    function toggle() {
-      open = !open;
-      setOriginAtApplyCenter();
-      stage.classList.toggle("pills-open", open);
-      chev.style.transform = open ? "rotate(180deg)" : "rotate(0deg)";
-    }
-
-    apply.addEventListener("click", toggle);
-
-    window.addEventListener("resize", () => { if (open) setOriginAtApplyCenter(); });
-    window.addEventListener("scroll", () => { if (open) setOriginAtApplyCenter(); }, { passive: true });
-
-    document.addEventListener("click", (e) => {
-      if (!open) return;
-      if (stage.contains(e.target)) return;
-      open = false;
-      stage.classList.remove("pills-open");
-      chev.style.transform = "rotate(0deg)";
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+      observer.observe(el);
     });
-  </script>
 
-  <script>
+    // ================= TEAM CAROUSEL =================
     const deck = document.getElementById("teamDeck");
     const teamCards = Array.from(deck.querySelectorAll(".team-card"));
     const prevBtn = document.getElementById("teamPrev");
@@ -1091,7 +1691,7 @@
 
     teamCards.forEach((_, i) => {
       const dot = document.createElement("button");
-      dot.className = "w-2.5 h-2.5 rounded-full bg-white/30 hover:bg-white/60 transition";
+      dot.className = "w-2.5 h-2.5 rounded-full bg-white/30 transition";
       dot.addEventListener("click", () => { active = i; render(); });
       dotsWrap.appendChild(dot);
     });
@@ -1112,7 +1712,7 @@
       });
 
       Array.from(dotsWrap.children).forEach((d, i) => {
-        d.className = "w-2.5 h-2.5 rounded-full transition " + (i === active ? "bg-white" : "bg-white/30 hover:bg-white/60");
+        d.className = "w-2.5 h-2.5 rounded-full transition " + (i === active ? "bg-[#34b29c] scale-125" : "bg-white/30 hover:bg-white/60");
       });
     }
 
@@ -1130,6 +1730,38 @@
     });
 
     render();
+
+     // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      
+      if (currentScroll > 100) {
+        navbar.classList.add('glass-strong');
+        navbar.style.padding = '0.75rem 1.5rem';
+      } else {
+        navbar.classList.remove('glass-strong');
+        navbar.style.padding = '';
+      }
+      
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    // ================= SMOOTH SCROLL =================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
   </script>
 
 </body>

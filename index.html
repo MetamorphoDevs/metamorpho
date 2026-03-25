@@ -41,6 +41,15 @@
       list-style: none;
     }
 
+    :root {
+      --meta-teal: #34b29c;
+      --meta-red: #d2001a;
+      --meta-dark: #193347;
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-highlight: rgba(255, 255, 255, 0.08);
+    }
+
     @font-face {
       font-family: 'MetaFont';
       src:
@@ -64,6 +73,9 @@
 
     body {
       font-family: 'MetaFont', sans-serif;
+      background: var(--meta-dark);
+      color: #fff;
+      overflow-x: hidden;
     }
 
     .font-alt {
@@ -79,28 +91,162 @@
     }
 
     .brand-section {
-      background: #193347;
+      background: var(--meta-dark);
     }
 
-    /* Reusable glass button style (works with Tailwind too) */
+    /* ================= ENHANCED GLASS EFFECTS ================= */
+    
+    /* Base glass with better depth */
     .glass {
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
     }
 
-    /* ---------- Campus buttons behavior ---------- */
+    /* Glass shine effect */
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+      transition: left 0.7s ease;
+    }
+
+    .glass:hover::before {
+      left: 100%;
+    }
+
+    /* Enhanced glass for cards */
+    .glass-card {
+      background: linear-gradient(145deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.25),
+        0 10px 20px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 35px 70px rgba(0, 0, 0, 0.3),
+        0 15px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ================= SCROLL ANIMATIONS ================= */
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-80px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(80px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+    .stagger-5 { transition-delay: 0.5s; }
+
+    /* ================= CAMPUS BUTTONS ================= */
     #campusDock {
-      transition: left 700ms ease, bottom 700ms ease, transform 700ms ease, width 700ms ease;
+      transition: left 700ms cubic-bezier(0.4, 0, 0.2, 1), 
+                  bottom 700ms cubic-bezier(0.4, 0, 0.2, 1), 
+                  transform 700ms cubic-bezier(0.4, 0, 0.2, 1), 
+                  width 700ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .campus-btn {
-      transition: width 700ms ease, height 700ms ease, border-radius 700ms ease, padding 700ms ease,
-        transform 300ms ease;
+      transition: all 700ms cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
       position: relative;
+    }
+
+    /* Enhanced campus button glass */
+    .campus-btn {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(30px) saturate(150%);
+      -webkit-backdrop-filter: blur(30px) saturate(150%);
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .campus-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .campus-btn:hover::before {
+      opacity: 1;
     }
 
     /* Text blocks */
@@ -121,24 +267,22 @@
       transition: opacity 300ms ease;
     }
 
-    /* Bubble mode (applied via JS class on #campusDock) */
+    /* Bubble mode */
     #campusDock.bubble {
       left: 3rem;
-      /* bottom-left dock */
       bottom: 3rem;
       transform: none;
-      /* remove centering translate */
       width: auto;
-      /* shrink wrapper */
     }
 
     #campusDock.bubble .campus-btn {
-      width: 72px;
-      /* bubble size */
-      height: 72px;
-      border-radius: 9999px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
       padding: 0;
-      /* no padding in bubble */
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
     }
 
     #campusDock.bubble .campus-full {
@@ -149,20 +293,7 @@
       opacity: 1;
     }
 
-    /* Hero hover overlay image (covers whole hero) */
-    #heroHoverOverlay {
-      opacity: 0;
-      transition: opacity 350ms ease;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-    }
-
-    #heroHoverOverlay.active {
-      opacity: 1;
-    }
-
+    /* Hero hover overlay */
     #heroHoverOverlay::after {
       content: "";
       position: absolute;
@@ -170,19 +301,15 @@
       background: rgba(0, 0, 0, 0.25);
     }
 
-    /* Hero hover overlay that expands from button bounds */
     #heroHoverOverlay {
       position: fixed;
       inset: 0;
       z-index: 25;
       pointer-events: none;
-
       opacity: 0;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-
-      /* The magic: clip-path animates from button edges to full-screen */
       clip-path: inset(var(--t, 50%) var(--r, 50%) var(--b, 50%) var(--l, 50%) round 24px);
       transition: clip-path 520ms cubic-bezier(0.2, 0.9, 0.2, 1),
         opacity 220ms ease;
@@ -190,13 +317,10 @@
 
     #heroHoverOverlay.active {
       opacity: 1;
-    }
-
-    /* Optional: makes it feel more cinematic */
-    #heroHoverOverlay.active {
       filter: saturate(1.05) contrast(1.05);
     }
 
+    /* ================= CARDS ================= */
     .card {
       position: relative;
       left: 0px;
@@ -205,107 +329,138 @@
       -webkit-backdrop-filter: blur(35px);
       border: 1px solid rgba(255, 255, 255, 0.25);
       transform-origin: bottom left;
-      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-        border-radius 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
     }
 
-    .card {
-      transform-origin: bottom left;
-      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.45s ease;
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, 
+        transparent 0%, 
+        rgba(0, 0, 0, 0.4) 100%);
+      z-index: 1;
+      opacity: 0.6;
+      transition: opacity 0.5s ease;
+    }
+
+    .card:hover::before {
+      opacity: 0.8;
+    }
+
+    /* Card shine effect */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 60%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.6s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .card:hover::after {
+      opacity: 1;
+      transform: scale(1);
     }
 
     @media (hover: hover) and (pointer: fine) {
       .campus-btn:hover {
         transform: translateY(-8px);
+        box-shadow: 
+          0 30px 60px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
       }
 
       .card:hover {
-        transform: translateY(-25px) scale(1.05);
+        transform: translateY(-20px) scale(1.03);
         z-index: 60;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
       }
 
       #cardContainer:hover .card:not(:hover) {
-        transform: translateX(-10px) scale(0.98);
+        transform: translateX(-15px) scale(0.97);
+        opacity: 0.7;
       }
     }
 
     /* ================= NAV LINK ANIMATION ================= */
-
     .navlink {
       position: relative;
       display: inline-block;
       padding: 8px 2px;
       opacity: 0.8;
       letter-spacing: 0.12em;
-      transition:
-        opacity 220ms ease,
-        transform 220ms ease,
-        color 220ms ease;
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* subtle lift */
     .navlink:hover {
       opacity: 1;
       transform: translateY(-2px);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
-    /* underline animation */
     .navlink::after {
       content: "";
       position: absolute;
       left: 50%;
       bottom: -6px;
-
       width: 0%;
       height: 1.5px;
-
-      background: rgba(255, 255, 255, 0.9);
-
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.9), 
+        transparent);
       transform: translateX(-50%);
-      transition: width 280ms cubic-bezier(0.2, 0.9, 0.2, 1);
+      transition: width 400ms cubic-bezier(0.2, 0.9, 0.2, 1);
     }
 
-    /* underline grows from center */
     .navlink:hover::after {
       width: 100%;
-    }
-
-    /* subtle glow (VERY light) */
-    .navlink:hover {
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.18);
     }
 
     .navlink::before {
       content: "";
       position: absolute;
-      inset: 0;
+      inset: -8px -12px;
       border-radius: 999px;
-      background: linear-gradient(120deg,
-          transparent,
-          rgba(255, 255, 255, 0.12),
-          transparent);
+      background: radial-gradient(circle, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 70%);
       opacity: 0;
-      transition: opacity 260ms ease;
+      transition: opacity 300ms ease;
+      z-index: -1;
     }
 
     .navlink:hover::before {
       opacity: 1;
     }
 
-    /* Simple mobile nav */
+    /* Mobile nav */
     #mobileMenu {
       max-height: 0;
       opacity: 0;
       pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #mobileMenu.open {
       max-height: 520px;
       opacity: 1;
       pointer-events: auto;
+      transform: translateY(0);
     }
 
+    /* Hero gradient */
     .hero {
       position: relative;
     }
@@ -316,14 +471,14 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 200px;
-
+      height: 300px;
       background: linear-gradient(to bottom,
           rgba(11, 23, 34, 0) 0%,
-          rgba(11, 23, 34, 0.5) 60%,
+          rgba(11, 23, 34, 0.3) 40%,
+          rgba(25, 51, 71, 0.8) 80%,
           #193347 100%);
-
       pointer-events: none;
+      z-index: 15;
     }
 
     .cards-bg {
@@ -337,6 +492,7 @@
       color: rgba(255, 255, 255, 0.62);
     }
 
+    /* Clarity section enhancements */
     .clarity-panel {
       position: relative;
       overflow: hidden;
@@ -346,17 +502,129 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 55%);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        transparent 55%);
       pointer-events: none;
     }
 
-    .trust-badge {
-      border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.08);
-      padding: 0.8rem 1rem;
+    /* Counter animation styling */
+    #est-year {
+      background: linear-gradient(135deg, #d2001a 0%, #ff3366 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 60px rgba(210, 0, 26, 0.3);
+      transition: transform 0.3s ease;
     }
 
+    #est-year:hover {
+      transform: scale(1.05);
+    }
+
+    /* Video section enhancement */
+    .video-container {
+      position: relative;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow: 
+        0 50px 100px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .video-container:hover {
+      transform: translateY(-10px);
+      box-shadow: 
+        0 60px 120px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    .video-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, 
+        rgba(210, 0, 26, 0.1) 0%, 
+        transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Team section enhancements */
+    .team-card {
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .team-card:hover {
+      transform: translateY(-15px) scale(1.02);
+    }
+
+    .team-card img {
+      transition: transform 0.8s ease;
+    }
+
+    .team-card:hover img {
+      transform: scale(1.1);
+    }
+
+    /* CTA Buttons enhancement */
+    .cta-glass {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cta-glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .cta-glass:hover::before {
+      left: 100%;
+    }
+
+    .cta-glass:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Footer divider animation */
+    .divider {
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+      transform: scaleX(0);
+      transition: transform 1s ease;
+    }
+
+    .divider.active::before {
+      transform: scaleX(1);
+    }
+
+    /* Responsive */
     @media (max-width: 1023px) {
       .card {
         transform-origin: center bottom;
@@ -426,39 +694,247 @@
       }
     }
 
-
-    @keyframes kenBurns {
-      0% {
-        transform: scale(1);
-      }
-
-      100% {
-        transform: scale(1.15);
-      }
+    /* Floating animation for hero elements */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
     }
 
-    @keyframes kenBurns {
-      0% {
-        transform: scale(1) translateX(0px);
-      }
+    .float-animation {
+      animation: float 6s ease-in-out infinite;
+    }
 
-      100% {
-        transform: scale(1.1) translateX(-20px);
-      }
+    /* Pulse glow for important elements */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(210, 0, 26, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(210, 0, 26, 0.6); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    /* ===== ABOUT PAGE THEME OVERRIDES ===== */
+    .glass {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .glass::before {
+      inset: 0;
+      top: auto;
+      left: auto;
+      width: auto;
+      height: auto;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .glass:hover::before {
+      left: auto;
+      opacity: 1;
+    }
+
+    .glass-card {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+    }
+
+    .glass-card:hover {
+      box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(52, 178, 156, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-pill {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .navlink {
+      position: relative;
+      transition: all 0.3s ease;
+      opacity: 0.85;
+    }
+
+    .navlink::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+
+    .navlink:hover::after,
+    .navlink.active::after {
+      width: 100%;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ambient-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: ambientFloat 15s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--meta-teal);
+      top: 10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--meta-red);
+      bottom: 20%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #fff;
+      top: 50%;
+      left: 50%;
+      animation-delay: -10s;
+      opacity: 0.08;
+    }
+
+    @keyframes ambientFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.9); }
+      75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    .campus-btn {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .campus-btn:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(52, 178, 156, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .card::after {
+      background: linear-gradient(135deg,
+        rgba(52, 178, 156, 0.28) 0%,
+        transparent 50%,
+        rgba(210, 0, 26, 0.2) 100%);
+    }
+
+    .cta-glass {
+      background: linear-gradient(120deg, var(--meta-teal), var(--meta-red));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .cta-glass:hover {
+      background-position: 100% 0;
+      box-shadow:
+        0 20px 40px rgba(52, 178, 156, 0.3),
+        0 0 60px rgba(52, 178, 156, 0.1);
+    }
+
+    .cards-bg {
+      background-color: var(--meta-dark);
     }
   </style>
 </head>
 
 <body class="relative text-white overflow-x-hidden">
 
+  <div class="ambient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
   <!-- ================= NAV ================= -->
-  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50">
-    <a href="index.html" class="flex items-center gap-3">
-      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16" alt="Meta logo" />
+  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
+    <a href="/index.html" class="flex items-center gap-3 magnetic group">
+      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
     </a>
 
     <!-- Desktop nav -->
-    <div class="hidden md:block backdrop-blur-xl bg-white/10 border border-white/20 px-10 py-4 rounded-full shadow-lg">
+    <div class="hidden md:block nav-pill rounded-full px-10 py-4 shadow-lg">
       <ul class="flex gap-8 text-sm tracking-wider items-center">
         <li><a class="navlink" href="index.html">HOME</a></li>
         <li><a class="navlink" href="about.html">ABOUT</a></li>
@@ -479,7 +955,7 @@
   </nav>
 
   <!-- Mobile nav panel -->
-  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4 transition-all duration-300">
+  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4">
     <ul class="grid gap-2 text-sm tracking-wider">
       <li><a class="navlink block" href="index.html">HOME</a></li>
       <li><a class="navlink block" href="about.html">ABOUT</a></li>
@@ -493,101 +969,112 @@
   </div>
 
   <!-- ================= HERO ================= -->
-  <section class="hero relative min-h-[118svh] md:h-[160vh] overflow-hidden">
+<section class="hero relative min-h-[118svh] md:h-[160vh] overflow-hidden">
 
-    <img src="assets/images/hero.jpeg" class="absolute inset-0 w-full h-full object-cover z-0" />
+  <img src="assets/images/hero.jpeg"
+    class="absolute inset-0 w-full h-full object-cover z-0 scale-110 pointer-events-none"
+    id="heroBg" />
 
-    <!-- Background Title -->
+  <!-- Title -->
+  <div class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
     <img src="/assets/images/titlelogo.png"
-      class="fixed top-[25%] left-1/2 -translate-x-1/2 -translate-y-1/4 max-h-[34vh] sm:max-h-[42vh] md:max-h-[60vh] max-w-[82vw] w-auto z-10 opacity-100 pointer-events-none"
-      alt="Metamorpho title" />
+      class="fixed -mt-[64vh] w-[96vw] max-w-[760px] sm:max-w-[920px] md:max-w-[1180px] h-auto opacity-100 float-animation"
+      alt="Metamorpho title"
+      id="heroTitle" />
+  </div>
 
-    <img src="assets/images/mountainstrasparent.png" class="absolute inset-0 w-full h-full object-cover z-10" />
+  <!-- Mountains -->
+  <img src="assets/images/mountainstrasparent.png"
+    class="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none"
+    id="heroMountains" />
 
+  <!-- Soft fade into next section -->
+  <div class="absolute bottom-0 left-0 w-full h-48 md:h-72 z-20 pointer-events-none
+    bg-gradient-to-b from-transparent via-[#0B1722]/40 to-[#193347]">
+  </div>
 
-    <!-- Soft fade into next section -->
-    <div class="absolute bottom-0 left-0 w-full h-48 md:h-72 z-20 pointer-events-none
-    bg-gradient-to-b from-transparent via-[#0B1722]/40 to-[#16324A]">
+  <!-- HERO HOVER OVERLAY -->
+  <div id="heroHoverOverlay" class="fixed inset-0 z-[25] pointer-events-none"></div>
+
+  <!-- HERO CAMPUS BUTTONS -->
+  <div id="campusDock"
+    class="fixed bottom-5 md:bottom-12 left-1/2 -translate-x-1/2 w-[92%] max-w-[1400px] z-[40]">
+    <div class="flex gap-4 md:gap-6">
+
+      <!-- Pretoria -->
+      <a href="./pretoria.html"
+        class="campus-btn block w-1/2 h-auto rounded-3xl px-5 md:px-10 py-6 md:py-10 text-left group"
+        data-hero="/assets/images/pretoria-hero.jpg">
+        <div class="campus-full">
+          <div class="text-sm tracking-widest opacity-80 mb-2 group-hover:opacity-100 transition-opacity">CAMPUS</div>
+          <div class="text-3xl md:text-4xl font-alt mb-2 group-hover:translate-x-2 transition-transform">Pretoria</div>
+          <div class="hidden md:block text-white/70 group-hover:text-white transition-colors">View info, fees, team & admission.</div>
+        </div>
+        <div class="campus-bubble">PTA</div>
+      </a>
+
+      <!-- Cape Town -->
+      <a href="./capetown.html"
+        class="campus-btn block w-1/2 h-auto rounded-3xl px-5 md:px-10 py-6 md:py-10 text-left group"
+        data-hero="/assets/images/capetown-hero.jpg">
+        <div class="campus-full">
+          <div class="text-sm tracking-widest opacity-80 mb-2 group-hover:opacity-100 transition-opacity">CAMPUS</div>
+          <div class="text-3xl md:text-4xl font-alt mb-2 group-hover:translate-x-2 transition-transform">Cape Town</div>
+          <div class="hidden md:block text-white/70 group-hover:text-white transition-colors">Explore the Strand campus & apply.</div>
+        </div>
+        <div class="campus-bubble">CPT</div>
+      </a>
+
     </div>
+  </div>
 
-    <!-- HERO HOVER OVERLAY (image bleed) -->
-    <div id="heroHoverOverlay" class="fixed inset-0 z-25 pointer-events-none"></div>
+</section>
 
-    <!-- HERO CAMPUS BUTTONS -->
-    <div id="campusDock" class="fixed bottom-5 md:bottom-12 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-[1400px]">
-      <div class="flex gap-4 md:gap-6">
-
-        <!-- Pretoria -->
-        <a href="pretoria.html" class="campus-btn glass w-1/2 h-auto rounded-3xl px-5 md:px-10 py-6 md:py-10 text-left"
-          data-hero="/assets/images/pretoria-hero.jpg">
-          <div class="campus-full">
-            <div class="text-sm tracking-widest opacity-80 mb-2">CAMPUS</div>
-            <div class="text-3xl md:text-4xl font-alt mb-2">Pretoria</div>
-            <div class="hidden md:block text-white/70">View info, fees, team & admission.</div>
-          </div>
-          <div class="campus-bubble">PTA</div>
-        </a>
-
-        <!-- Cape Town -->
-        <a href="capetown.html" class="campus-btn glass w-1/2 h-auto rounded-3xl px-5 md:px-10 py-6 md:py-10 text-left"
-          data-hero="/assets/images/capetown-hero.jpg">
-          <div class="campus-full">
-            <div class="text-sm tracking-widest opacity-80 mb-2">CAMPUS</div>
-            <div class="text-3xl md:text-4xl font-alt mb-2">Cape Town</div>
-            <div class="hidden md:block text-white/70">Explore the Strand campus & apply.</div>
-          </div>
-          <div class="campus-bubble">CPT</div>
-        </a>
-
-      </div>
-    </div>
-
-  </section>
-  <!-- ================= CLARITY SECTION (EDITORIAL STYLE) ================= -->
+  <!-- ================= CLARITY SECTION ================= -->
   <section class="brand-section relative z-20 px-6 md:px-12 py-24 md:py-32 overflow-hidden">
 
     <div class="grid lg:grid-cols-2 gap-16 items-center max-w-[1400px] mx-auto">
 
       <!-- LEFT: TEXT -->
-      <div>
-        <div class="text-xs tracking-[0.35em] opacity-60 mb-4 uppercase">
+      <div class="reveal">
+        <div class="text-xs tracking-[0.35em] opacity-60 mb-4 uppercase section-kicker">
           What Metamorpho Is
         </div>
 
-        <h2 class="text-4xl md:text-5xl lg:text-6xl font-alt leading-tight max-w-[18ch]">
+        <h2 class="text-4xl md:text-5xl lg:text-6xl font-alt leading-tight max-w-[18ch] reveal-left stagger-1">
           A one-year process that helps discover identity, potential, and calling in community.
         </h2>
 
-        <p class="mt-6 text-white/70 text-lg leading-relaxed max-w-[55ch]">
-          During a one-year process we navigate our students to take charge of their lives and to determine God’s
+        <p class="mt-6 text-white/70 text-lg leading-relaxed max-w-[55ch] reveal-left stagger-2">
+          During a one-year process we navigate our students to take charge of their lives and to determine God's
           purpose for their life.
           We have a firm belief in equipping students to have outstanding metacognitive skills and teach them how to
           utilize their unique gifts to contribute meaningfully to society.
-          We wish to empower people between 18-23 years old to be the next generation of city changers and form part of
-          a 28 year legacy.
+          We wish to empower people between 18-23 years old to be the next generation of city changers and form part
+          of a 28 year legacy.
         </p>
       </div>
 
       <!-- RIGHT: BIG TRUST BLOCK -->
-      <div class="relative flex flex-col items-start lg:items-end text-left lg:text-right">
+      <div class="relative flex flex-col items-start lg:items-end text-left lg:text-right reveal-right">
 
         <!-- BIG EST -->
         <div id="est-year"
-          class="font-alt text-[64px] md:text-[100px] lg:text-[140px] leading-none opacity-90 text-[#d2001a]">
+          class="font-alt text-[64px] md:text-[100px] lg:text-[140px] leading-none opacity-90 cursor-default select-none">
           0
         </div>
 
-        <div class="text-xs tracking-[0.35em] opacity-60 -mt-2 mb-4 uppercase">
+        <div class="text-xs tracking-[0.35em] opacity-60 -mt-2 mb-4 uppercase reveal-right stagger-1">
           since
         </div>
 
         <!-- STAT -->
-        <div class="text-2xl md:text-3xl font-alt mt-4 max-w-[12ch]">
+        <div class="text-2xl md:text-3xl font-alt mt-4 max-w-[12ch] reveal-right stagger-2">
           Thousands of lives impacted
         </div>
 
         <!-- subtle supporting line -->
-        <div class="text-white/60 text-sm mt-3 max-w-[22ch]">
+        <div class="text-white/60 text-sm mt-3 max-w-[22ch] reveal-right stagger-3">
           Decades of forming young people through challenge, faith, and community.
         </div>
 
@@ -596,16 +1083,17 @@
     </div>
 
   </section>
-  <!-- ================= SECOND PAGE ================= -->
+
+  <!-- ================= VIDEO SECTION ================= -->
   <section
     class="brand-section min-h-screen flex flex-col items-center justify-center px-5 md:px-10 py-20 md:py-24 relative z-20">
 
-    <h2 class="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 md:mb-16 font-alt text-center">
+    <h2 class="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 md:mb-16 font-alt text-center reveal">
       Your journey starts here
     </h2>
 
-    <div class="w-[95%] max-w-[1400px] shadow-[0_40px_100px_rgba(0,0,0,0.45)]">
-      <div class="relative w-full rounded-3xl overflow-hidden" style="padding-top:56.25%">
+    <div class="w-[95%] max-w-[1400px] reveal-scale stagger-1">
+      <div class="video-container relative w-full rounded-3xl overflow-hidden" style="padding-top:56.25%">
         <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/5ld3y54kb10"
           title="Metamorpho Video" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -614,16 +1102,17 @@
     </div>
 
   </section>
-  <!-- ================= THIRD PAGE ================= -->
+
+  <!-- ================= CARDS SECTION ================= -->
   <section class="min-h-[80vh] relative z-20 flex items-center cards-bg">
     <div class="w-full max-w-[1400px] mx-auto px-5 md:px-12 py-20 md:py-0">
 
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 reveal">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold font-alt text-left">
           Want to know more about Metamorpho?
         </h2>
-        <div class="text-white/70 max-w-[60ch]">
-          Click a card to explore the experience — what you do, how you live, and what you’ll grow through.
+        <div class="text-white/70 max-w-[60ch] reveal-right stagger-1">
+          Click a card to explore the experience — what you do, how you live, and what you'll grow through.
         </div>
       </div>
 
@@ -631,51 +1120,43 @@
       <div id="cardContainer" class="flex justify-center items-center gap-5 md:gap-8 flex-wrap md:flex-nowrap">
 
         <a href="about.html#camps"
-          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl transition-all duration-700 ease-in-out">
-          <img src="/assets/images/camps.jpeg" class="absolute inset-0 w-full h-full object-cover -z-10"
+          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl reveal stagger-1">
+          <img src="/assets/images/camps.jpeg" class="absolute inset-0 w-full h-full object-cover -z-10 transition-transform duration-700 group-hover:scale-110"
             alt="Students at camp" loading="lazy" decoding="async">
-          <div class="absolute inset-0 bg-black/30"></div>
-          <div class="card-title absolute bottom-6 left-6 text-xl MetaFont transition-opacity duration-300">Camps</div>
-          <div class="shine absolute inset-0 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[1]"></div>
+          <div class="card-title absolute bottom-6 left-6 text-xl font-alt z-[3] transition-all duration-300 group-hover:bottom-8 group-hover:translate-x-2">Camps</div>
         </a>
 
         <a href="about.html#class"
-          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl transition-all duration-700 ease-in-out">
-          <img src="/assets/images/class.jpg" class="absolute inset-0 w-full h-full object-cover -z-10"
+          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl reveal stagger-2">
+          <img src="/assets/images/class.jpg" class="absolute inset-0 w-full h-full object-cover -z-10 transition-transform duration-700 group-hover:scale-110"
             alt="Class session" loading="lazy" decoding="async">
-          <div class="absolute inset-0 bg-black/30"></div>
-          <div class="card-title absolute bottom-6 left-6 text-xl MetaFont transition-opacity duration-300">Class</div>
-          <div class="shine absolute inset-0 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[1]"></div>
+          <div class="card-title absolute bottom-6 left-6 text-xl font-alt z-[3] transition-all duration-300 group-hover:bottom-8 group-hover:translate-x-2">Class</div>
         </a>
 
         <a href="about.html#communes"
-          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl transition-all duration-700 ease-in-out">
-          <img src="/assets/images/commune.jpeg" class="absolute inset-0 w-full h-full object-cover -z-10"
+          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl reveal stagger-3">
+          <img src="/assets/images/commune.jpg" class="absolute inset-0 w-full h-full object-cover -z-10 transition-transform duration-700 group-hover:scale-110"
             alt="Students in community" loading="lazy" decoding="async">
-          <div class="absolute inset-0 bg-black/30"></div>
-          <div class="card-title absolute bottom-6 left-6 text-xl MetaFont transition-opacity duration-300">Communes
-          </div>
-          <div class="shine absolute inset-0 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[1]"></div>
+          <div class="card-title absolute bottom-6 left-6 text-xl font-alt z-[3] transition-all duration-300 group-hover:bottom-8 group-hover:translate-x-2">Communes</div>
         </a>
 
         <a href="about.html#coaching"
-          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl transition-all duration-700 ease-in-out">
-          <img src="/assets/images/coaching.jpeg" class="absolute inset-0 w-full h-full object-cover -z-10"
+          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl reveal stagger-4">
+          <img src="/assets/images/coaching.jpeg" class="absolute inset-0 w-full h-full object-cover -z-10 transition-transform duration-700 group-hover:scale-110"
             alt="Coaching conversation" loading="lazy" decoding="async">
-          <div class="absolute inset-0 bg-black/30"></div>
-          <div class="card-title absolute bottom-6 left-6 text-xl MetaFont transition-opacity duration-300">Coaching
-          </div>
-          <div class="shine absolute inset-0 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[1]"></div>
+          <div class="card-title absolute bottom-6 left-6 text-xl font-alt z-[3] transition-all duration-300 group-hover:bottom-8 group-hover:translate-x-2">Coaching</div>
         </a>
 
         <a href="about.html#changeroom"
-          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl transition-all duration-700 ease-in-out">
-          <img src="/assets/images/changeroom.jpg" class="absolute inset-0 w-full h-full object-cover -z-10"
+          class="card w-full max-w-sm md:w-64 h-[24rem] sm:h-[28rem] md:h-[36rem] rounded-3xl overflow-hidden relative group shadow-xl reveal stagger-5">
+          <img src="/assets/images/changeroom.jpg" class="absolute inset-0 w-full h-full object-cover -z-10 transition-transform duration-700 group-hover:scale-110"
             alt="Changeroom session" loading="lazy" decoding="async">
-          <div class="absolute inset-0 bg-black/30"></div>
-          <div class="card-title absolute bottom-6 left-6 text-xl MetaFont transition-opacity duration-300">Changeroom
-          </div>
-          <div class="shine absolute inset-0 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[1]"></div>
+          <div class="card-title absolute bottom-6 left-6 text-xl font-alt z-[3] transition-all duration-300 group-hover:bottom-8 group-hover:translate-x-2">Changeroom</div>
         </a>
 
       </div>
@@ -683,29 +1164,29 @@
     </div>
   </section>
 
-  <!-- ================= FOURTH PAGE ================= -->
+  <!-- ================= TEAM SECTION ================= -->
   <section class="min-h-[70vh] cards-bg relative z-20 px-6 md:px-12 py-24 md:py-32">
     <div class="w-full max-w-[1400px] mx-auto">
-      <div class="text-center">
+      <div class="text-center reveal">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold font-alt">Meet the Mufasa</h2>
-        <p class="text-white/70 mt-4 max-w-[70ch] mx-auto leading-relaxed">
+        <p class="text-white/70 mt-4 max-w-[70ch] mx-auto leading-relaxed reveal stagger-1">
           Our team is called Mufasa, yes, like Lion King! because we need to remember who we are in Christ and lead the
           students to do the same.
         </p>
       </div>
 
       <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-        <div>
-          <h3 class="text-2xl md:text-3xl font-alt text-center mb-4">Pretoria Team</h3>
-          <div class="glass rounded-[2rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.45)]">
+        <div class="team-card glass-card rounded-[2rem] overflow-hidden reveal-left stagger-1">
+          <h3 class="text-2xl md:text-3xl font-alt text-center mb-4 py-6">Pretoria Team</h3>
+          <div class="overflow-hidden">
             <img src="/assets/images/Pretoria-team.jpg" alt="Pretoria team leaders"
               class="w-full h-[320px] md:h-[500px] object-cover" loading="lazy" decoding="async">
           </div>
         </div>
 
-        <div>
-          <h3 class="text-2xl md:text-3xl font-alt text-center mb-4">Cape Town Team</h3>
-          <div class="glass rounded-[2rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.45)]">
+        <div class="team-card glass-card rounded-[2rem] overflow-hidden reveal-right stagger-2">
+          <h3 class="text-2xl md:text-3xl font-alt text-center mb-4 py-6">Cape Town Team</h3>
+          <div class="overflow-hidden">
             <img src="/assets/images/Cpt-team.jpg" alt="Cape Town team leaders"
               class="w-full h-[320px] md:h-[500px] object-cover" loading="lazy" decoding="async">
           </div>
@@ -714,23 +1195,23 @@
     </div>
   </section>
 
-  <!-- ================= SIXTH PAGE ================= -->
+  <!-- ================= CTA SECTION ================= -->
   <section class="min-h-[60vh] cards-bg flex items-center justify-center relative z-20 px-6 md:px-12">
-    <div class="w-full max-w-[1200px]">
-      <h2 class="text-4xl md:text-5xl font-bold font-alt">Ready to apply?</h2>
-      <p class="text-white/70 mt-4 max-w-[70ch]">
+    <div class="w-full max-w-[1200px] reveal">
+      <h2 class="text-4xl md:text-5xl font-bold font-alt reveal-left">Ready to apply?</h2>
+      <p class="text-white/70 mt-4 max-w-[70ch] reveal-left stagger-1">
         Choose a campus to see admission days, fees, and the team — or contact us if you need help.
       </p>
 
-      <div class="mt-10 flex flex-wrap gap-4">
+      <div class="mt-10 flex flex-wrap gap-4 reveal-scale stagger-2">
         <a href="capetown.html#enroll"
-          class="glass rounded-full px-6 md:px-8 py-4 w-full sm:w-auto text-center hover:bg-white/15 transition">Apply:
+          class="cta-glass glass rounded-full px-6 md:px-8 py-4 w-full sm:w-auto text-center">Apply:
           Cape Town</a>
         <a href="pretoria.html#enroll"
-          class="glass rounded-full px-6 md:px-8 py-4 w-full sm:w-auto text-center hover:bg-white/15 transition">Apply:
+          class="cta-glass glass rounded-full px-6 md:px-8 py-4 w-full sm:w-auto text-center">Apply:
           Pretoria</a>
         <a href="contact.html"
-          class="rounded-full px-6 md:px-8 py-4 w-full sm:w-auto text-center border border-white/25 hover:border-white/50 transition">Contact</a>
+          class="cta-glass rounded-full px-6 md:px-8 py-4 w-full sm:w-auto text-center border border-white/25 hover:border-white/50 hover:bg-white/5 transition-all duration-300">Contact</a>
       </div>
     </div>
   </section>
@@ -738,8 +1219,8 @@
   <!-- ================= FOOTER ================= -->
   <footer class="px-6 md:px-12 pb-10 cards-bg">
     <div
-      class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-      <div class="flex items-center gap-3">
+      class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between reveal">
+      <div class="flex items-center gap-3 hover:opacity-80 transition-opacity">
         <img src="/assets/images/meta.logo.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
         <div class="text-xs tracking-widest opacity-70">METAMORPHO</div>
       </div>
@@ -749,13 +1230,65 @@
       </div>
 
       <div class="flex flex-wrap gap-4 md:gap-6 text-xs tracking-widest opacity-70">
-        <a class="hover:opacity-100" href="/faq.html">FAQ</a>
-        <a class="hover:opacity-100" href="/navigator-login.html">NAVIGATOR</a>
+        <a class="hover:opacity-100 hover:text-white transition-all duration-300 relative group" href="/faq.html">
+          FAQ
+          <span class="absolute bottom-0 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="hover:opacity-100 hover:text-white transition-all duration-300 relative group" href="/navigator-login.html">
+          NAVIGATOR
+          <span class="absolute bottom-0 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
       </div>
     </div>
   </footer>
 
   <script>
+    // ================= SCROLL OBSERVER =================
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          
+          // Special handling for divider
+          if (entry.target.classList.contains('divider')) {
+            entry.target.classList.add('active');
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .divider').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ================= PARALLAX EFFECTS =================
+    const heroBg = document.getElementById('heroBg');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroMountains = document.getElementById('heroMountains');
+
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const rate = scrolled * 0.5;
+      
+      if (heroBg) {
+        heroBg.style.transform = `scale(1.1) translateY(${rate * 0.2}px)`;
+      }
+      
+      if (heroTitle) {
+        heroTitle.style.transform = `translate(-50%, calc(-50% + ${rate * 0.4}px))`;
+      }
+      
+      if (heroMountains) {
+        heroMountains.style.transform = `translateY(${rate * 0.1}px)`;
+      }
+    }, { passive: true });
+
+    // ================= CAMPUS DOCK =================
     const dock = document.getElementById("campusDock");
     const buttons = document.querySelectorAll(".campus-btn");
     const overlay = document.getElementById("heroHoverOverlay");
@@ -806,7 +1339,6 @@
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
-      // Inset distances from viewport edges (top, right, bottom, left)
       const top = rect.top;
       const left = rect.left;
       const right = vw - rect.right;
@@ -824,11 +1356,9 @@
           const img = btn.getAttribute("data-hero");
           overlay.style.backgroundImage = `url('${img}')`;
 
-          // Start clip exactly at button edges
           setClipFromElement(btn);
           overlay.classList.add("active");
 
-          // Next frame: expand to full screen
           requestAnimationFrame(() => {
             overlay.style.setProperty("--t", `0px`);
             overlay.style.setProperty("--r", `0px`);
@@ -838,16 +1368,12 @@
         });
 
         btn.addEventListener("mouseleave", () => {
-          // Shrink back into the button before fading out
           setClipFromElement(btn);
-
-          // Fade after the clip starts shrinking (feels like it returns into button)
           setTimeout(() => overlay.classList.remove("active"), 180);
         });
       });
     }
 
-    // If window resizes while hovering, keep it accurate
     window.addEventListener("resize", () => {
       syncDockMode();
       const hovered = document.querySelector(".campus-btn:hover");
@@ -864,8 +1390,8 @@
 
     syncDockMode();
 
+    // ================= COUNTER ANIMATION =================
     const estYearEl = document.getElementById("est-year");
-
     let hasAnimated = false;
 
     function animateCounter(target, duration) {
@@ -874,7 +1400,8 @@
 
       function update(currentTime) {
         const progress = Math.min((currentTime - startTime) / duration, 1);
-        const value = Math.floor(progress * target);
+        const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+        const value = Math.floor(easeProgress * target);
 
         estYearEl.textContent = value;
 
@@ -888,18 +1415,32 @@
       requestAnimationFrame(update);
     }
 
-    // Trigger when element is visible
-    const observer = new IntersectionObserver((entries) => {
+    const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && !hasAnimated) {
-          animateCounter(1998, 1500); // 1.5s animation
+          animateCounter(1998, 2000);
           hasAnimated = true;
         }
       });
     }, { threshold: 0.6 });
 
-    observer.observe(estYearEl);
+    if (estYearEl) {
+      counterObserver.observe(estYearEl);
+    }
 
+    // ================= SMOOTH SCROLL =================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
   </script>
 </body>
 

@@ -96,17 +96,274 @@
       html { scroll-padding-top: 88px; }
       [id] { scroll-margin-top: 88px; }
     }
+    /* ===== ABOUT PAGE THEME OVERRIDES ===== */
+    :root {
+      --meta-teal: #34b29c;
+      --meta-red: #d2001a;
+      --meta-dark: #0B1722;
+    }
+
+    body {
+      background: var(--meta-dark);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .glass {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .glass:hover::before {
+      opacity: 1;
+    }
+
+    .nav-pill {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-pill a {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-pill a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transition: width 0.3s ease;
+    }
+
+    .nav-pill a:hover::after,
+    .nav-pill a.active::after {
+      width: 100%;
+    }
+
+    .btn {
+      position: relative;
+      background: linear-gradient(120deg, var(--meta-teal), var(--meta-red));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn:hover {
+      background-position: 100% 0;
+      transform: translateY(-3px);
+      box-shadow:
+        0 20px 40px rgba(52, 178, 156, 0.3),
+        0 0 60px rgba(52, 178, 156, 0.1);
+      opacity: 1;
+    }
+
+    .btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.04) 100%);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .market-bg {
+      filter: brightness(0.35) contrast(1.1);
+      transform: scale(1.1);
+      animation: bgZoom 20s ease-in-out infinite alternate;
+    }
+
+    .market-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(11, 23, 34, 0.6) 100%);
+      pointer-events: none;
+    }
+
+    .ambient-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: ambientFloat 15s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--meta-teal);
+      top: 10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--meta-red);
+      bottom: 20%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #fff;
+      top: 50%;
+      left: 50%;
+      animation-delay: -10s;
+      opacity: 0.08;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @keyframes ambientFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.9); }
+      75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    @keyframes bgZoom {
+      0% { transform: scale(1.1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1%, -1%); }
+    }
+
+    /* Mobile nav */
+    #mobileMenu {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mobileMenu.open {
+      max-height: 520px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
   </style>
 </head>
 
 <body class="overflow-x-hidden">
 <div class="market-bg"></div>
 
+  <div class="ambient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
   <!-- ================= NAV ================= -->
-  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50">
-    <a href="/index.html" class="flex items-center gap-3">
-      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16" alt="Meta logo" />
-      <span class="hidden md:block text-xs tracking-widest opacity-80">METAMORPHO</span>
+  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
+    <a href="/index.html" class="flex items-center gap-3 magnetic group">
+      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
+      <span class="hidden md:block text-xs tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">BACK HOME</span>
     </a>
 
     <div class="hidden md:block nav-pill px-10 py-4 rounded-full shadow-lg">
@@ -115,22 +372,38 @@
         <li><a class="opacity-85 hover:opacity-100" href="/about.html">ABOUT</a></li>
         <li><a class="opacity-85 hover:opacity-100" href="/gallery.html">GALLERY</a></li>
         <li><a class="opacity-85 hover:opacity-100" href="/metaventures.html">METAVENTURES</a></li>
-        <li><a class="opacity-100 font-alt" href="/market.html">MARKET</a></li>
+        <li><a class="opacity-100 font-alt active" href="/market.html">MARKET</a></li>
         <li><a class="opacity-85 hover:opacity-100" href="/shop.html">SHOP</a></li>
         <li><a class="opacity-85 hover:opacity-100" href="/contact.html">CONTACT</a></li>
         <li><a class="opacity-85 hover:opacity-100" href="/faq.html">FAQ</a></li>
       </ul>
     </div>
 
-    <a href="/contact.html" class="md:hidden glass px-4 py-2 rounded-full text-xs tracking-widest">
-      CONTACT
-    </a>
+    <!-- Mobile menu button -->
+    <button id="menuBtn" class="md:hidden glass rounded-full px-4 py-2 text-sm tracking-widest" aria-expanded="false"
+      aria-controls="mobileMenu">
+      MENU
+    </button>
   </nav>
+
+  <!-- Mobile nav panel -->
+  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4">
+    <ul class="grid gap-2 text-sm tracking-wider">
+      <li><a class="navlink block" href="index.html">HOME</a></li>
+      <li><a class="navlink block" href="about.html">ABOUT</a></li>
+      <li><a class="navlink block" href="gallery.html">GALLERY</a></li>
+      <li><a class="navlink block" href="metaventures.html">METAVENTURES</a></li>
+      <li><a class="navlink block" href="shop.html">SHOP</a></li>
+      <li><a class="navlink block" href="contact.html">CONTACT</a></li>
+      <li><a class="navlink block" href="faq.html">FAQ</a></li>
+      <li><a class="navlink block" href="market.html">MARKET</a></li>
+    </ul>
+  </div>
 
   <!-- ================= HERO ================= -->
   <section class="pt-28 md:pt-32 px-6 md:px-12">
     <div class="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-10 items-start">
-      <div>
+      <div class="reveal-left">
         <div class="text-xs tracking-[0.35em] opacity-70 mb-4">MARKET</div>
         <h1 class="text-5xl md:text-6xl font-alt leading-tight">We introduce the Metamorpho Market.</h1>
         <p class="mt-6 text-white/75 leading-relaxed max-w-[90ch]">
@@ -159,7 +432,7 @@
       </div>
 
       <!-- Quick info card -->
-      <div class="glass rounded-3xl p-6 md:p-10">
+      <div class="glass rounded-3xl p-6 md:p-10 reveal-right">
         <div class="text-sm tracking-widest opacity-70 mb-2">AT A GLANCE</div>
         <h2 class="text-2xl md:text-3xl font-alt">Key info</h2>
         <ul class="mt-5 space-y-3 text-white/75 leading-relaxed">
@@ -182,7 +455,7 @@
 
   <!-- ================= 1. MARKET DAYS ================= -->
   <section id="days" class="px-6 md:px-12 mt-16 md:mt-24">
-    <div class="max-w-[1200px] mx-auto glass rounded-[2.5rem] p-6 md:p-10">
+    <div class="max-w-[1200px] mx-auto glass rounded-[2.5rem] p-6 md:p-10 reveal">
       <div class="text-xs tracking-[0.35em] opacity-70 mb-3">1. MARKET DAYS</div>
       <h2 class="text-3xl md:text-4xl font-alt">2026 dates</h2>
       <p class="mt-3 text-white/70 max-w-[95ch]">
@@ -230,7 +503,7 @@
   <!-- ================= 2. APPLY TO BE A VENDOR ================= -->
   <section id="vendor" class="px-6 md:px-12 mt-16 md:mt-24">
     <div class="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-8 items-start">
-      <div class="glass rounded-3xl p-6 md:p-10">
+      <div class="glass rounded-3xl p-6 md:p-10 reveal-left">
         <div class="text-xs tracking-[0.35em] opacity-70 mb-3">2. APPLY TO BE A VENDOR</div>
         <h2 class="text-3xl md:text-4xl font-alt">Become a vendor</h2>
         <p class="mt-4 text-white/75 leading-relaxed">
@@ -257,7 +530,7 @@
         </div>
       </div>
 
-      <div class="glass rounded-3xl p-6 md:p-10">
+      <div class="glass rounded-3xl p-6 md:p-10 reveal-right">
         <div class="text-xs tracking-[0.35em] opacity-70 mb-3">VENDOR NOTES</div>
         <h3 class="text-2xl md:text-3xl font-alt">What to include</h3>
         <p class="mt-4 text-white/70 leading-relaxed">
@@ -281,7 +554,7 @@
 
   <!-- ================= 3. EVENTS ================= -->
   <section id="events" class="px-6 md:px-12 mt-16 md:mt-24 pb-16 md:pb-24">
-    <div class="max-w-[1200px] mx-auto glass rounded-[2.5rem] p-6 md:p-10">
+    <div class="max-w-[1200px] mx-auto glass rounded-[2.5rem] p-6 md:p-10 reveal">
       <div class="text-xs tracking-[0.35em] opacity-70 mb-3">3. EVENTS</div>
       <h2 class="text-3xl md:text-4xl font-alt">Events</h2>
       <p class="mt-3 text-white/70 max-w-[95ch]">
@@ -309,7 +582,7 @@
   </section>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="px-6 md:px-12 pb-10">
+  <footer class="px-6 md:px-12 pb-10 reveal">
     <div class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
       <div class="flex items-center gap-3">
         <img src="/assets/images/meta.logo.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
@@ -330,6 +603,21 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+      revealObserver.observe(el);
+    });
   </script>
 </body>
 </html>
