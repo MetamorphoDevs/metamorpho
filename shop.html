@@ -667,6 +667,26 @@
       progress += 20; // 5 seconds = 100%, so 20% per second
       progressBar.style.transform = `scaleX(${progress / 100})`;
     }, 1000);
+
+     // Mobile nav
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      mobileMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          menuBtn.setAttribute("aria-expanded", "false");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mobileMenu.classList.contains("open")) return;
+        if (mobileMenu.contains(e.target) || menuBtn.contains(e.target)) return;
+        mobileMenu.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      });
+    }
   </script>
 </body>
 </html>

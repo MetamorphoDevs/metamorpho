@@ -467,6 +467,26 @@ Thanks.`;
       resetSuccess.classList.remove("hidden");
       resetSuccess.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+
+     // Mobile nav
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      mobileMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          menuBtn.setAttribute("aria-expanded", "false");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mobileMenu.classList.contains("open")) return;
+        if (mobileMenu.contains(e.target) || menuBtn.contains(e.target)) return;
+        mobileMenu.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      });
+    }
   </script>
 </body>
 </html>

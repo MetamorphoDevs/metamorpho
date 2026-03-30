@@ -108,7 +108,7 @@
       position: fixed;
       inset: 0;
       z-index: -1;
-      background-image: url("assets/images/about-background.jpeg");
+      background-image: url("assets/images/about-background.webp");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -1156,6 +1156,26 @@
         el.style.transform = 'translate(0, 0)';
       });
     });
+
+     // Mobile nav
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      mobileMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          menuBtn.setAttribute("aria-expanded", "false");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mobileMenu.classList.contains("open")) return;
+        if (mobileMenu.contains(e.target) || menuBtn.contains(e.target)) return;
+        mobileMenu.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      });
+    }
 
     // Countdown functionality with animation
     function animateValue(el, start, end, duration = 900) {

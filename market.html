@@ -82,7 +82,7 @@
   inset: 0;
   z-index: -1;
 
-  background-image: url("assets/images/market-bg.jpeg");
+  background-image: url("assets/images/market-bg.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -618,6 +618,26 @@
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
       revealObserver.observe(el);
     });
+
+     // Mobile nav
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      mobileMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          menuBtn.setAttribute("aria-expanded", "false");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mobileMenu.classList.contains("open")) return;
+        if (mobileMenu.contains(e.target) || menuBtn.contains(e.target)) return;
+        mobileMenu.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      });
+    }
   </script>
 </body>
 </html>
