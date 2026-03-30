@@ -916,6 +916,19 @@
     .cards-bg {
       background-color: var(--meta-dark);
     }
+
+    @media (max-width: 767px) {
+  #navLogo {
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+  }
+
+  #navLogo.show-mobile-logo {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
   </style>
 </head>
 
@@ -930,8 +943,13 @@
   <!-- ================= NAV ================= -->
   <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
     <a href="/index.html" class="flex items-center gap-3 magnetic group">
-      <img src="/assets/images/meta.logo.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
-    </a>
+  <img
+    src="/assets/images/metalogosmall.png"
+    id="navLogo"
+    class="h-12 md:h-16 transition-all duration-300 group-hover:scale-110 md:opacity-100"
+    alt="Meta logo"
+  />
+</a>
 
     <!-- Desktop nav -->
     <div class="hidden md:block nav-pill rounded-full px-10 py-4 shadow-lg">
@@ -1221,7 +1239,7 @@
     <div
       class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between reveal">
       <div class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-        <img src="/assets/images/meta.logo.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
+        <img src="/assets/images/metalogosmall.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
         <div class="text-xs tracking-widest opacity-70">METAMORPHO</div>
       </div>
 
@@ -1441,6 +1459,30 @@
         }
       });
     });
+
+  const navLogo = document.getElementById("navLogo");
+  const heroSection = document.querySelector(".hero");
+
+  function toggleMobileNavLogo() {
+    if (!navLogo || !heroSection) return;
+
+    const isMobile = window.innerWidth < 768;
+
+    if (!isMobile) {
+      navLogo.classList.remove("show-mobile-logo");
+      return;
+    }
+
+    const heroRect = heroSection.getBoundingClientRect();
+
+    // Only show the mobile nav logo once the hero section has fully scrolled
+    // past the viewport.
+    navLogo.classList.toggle("show-mobile-logo", heroRect.bottom <= 0);
+  }
+
+  window.addEventListener("scroll", toggleMobileNavLogo);
+  window.addEventListener("resize", toggleMobileNavLogo);
+  window.addEventListener("load", toggleMobileNavLogo);
   </script>
 </body>
 
