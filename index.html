@@ -920,7 +920,7 @@
     @media (max-width: 767px) {
   #navLogo {
     opacity: 0;
-    transition: opacity 0.9s ease;
+    transition: opacity 0.3s ease;
     pointer-events: none;
   }
 
@@ -962,6 +962,7 @@
         <li><a class="navlink" href="contact.html">CONTACT</a></li>
         <li><a class="navlink" href="faq.html">FAQ</a></li>
         <li><a class="navlink" href="market.html">MARKET</a></li>
+        <li><a class="navlink" href="navigator-login.html">NAVI LOGIN</a></li>
       </ul>
     </div>
 
@@ -983,6 +984,7 @@
       <li><a class="navlink block" href="contact.html">CONTACT</a></li>
       <li><a class="navlink block" href="faq.html">FAQ</a></li>
       <li><a class="navlink block" href="market.html">MARKET</a></li>
+      <li><a class="navlink block" href="navigator-login.html">NAVI LOGIN</a></li>
     </ul>
   </div>
 
@@ -1239,7 +1241,7 @@
     <div
       class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between reveal">
       <div class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-        <img src="/assets/images/metalogosmall.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
+        <img src="/assets/images/meta.logo.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
         <div class="text-xs tracking-widest opacity-70">METAMORPHO</div>
       </div>
 
@@ -1461,10 +1463,9 @@
     });
 
   const navLogo = document.getElementById("navLogo");
-  const heroSection = document.querySelector(".hero");
 
   function toggleMobileNavLogo() {
-    if (!navLogo || !heroSection) return;
+    if (!navLogo) return;
 
     const isMobile = window.innerWidth < 768;
 
@@ -1473,11 +1474,10 @@
       return;
     }
 
-    const heroRect = heroSection.getBoundingClientRect();
-
-    // Only show the mobile nav logo once the hero section has fully scrolled
-    // past the viewport.
-    navLogo.classList.toggle("show-mobile-logo", heroRect.bottom <= 0);
+    // The hero title is fixed and transformed, so its bounding box is not a
+    // reliable signal for when the nav logo should appear on mobile.
+    const showThreshold = 1600;
+    navLogo.classList.toggle("show-mobile-logo", window.scrollY > showThreshold);
   }
 
   window.addEventListener("scroll", toggleMobileNavLogo);

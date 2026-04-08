@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gallery | Metamorpho</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    img { display: block; max-width: 100%; height: auto; }
+    a { text-decoration: none; }
+    
+    :root {
+      --meta-teal: #34b29c;
+      --meta-red: #d2001a;
+      --meta-dark: #0B1722;
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-highlight: rgba(255, 255, 255, 0.08);
+    }
+
+    @font-face {
+      font-family: 'MetaFont';
+      src: url('/assets/fonts/MetaFont-Regular.woff2') format('woff2'),
+           url('/assets/fonts/MetaFont.otf') format('opentype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'metabold';
+      src: url('/assets/fonts/metabold-Regular.woff2') format('woff2'),
+           url('/assets/fonts/metabold.otf') format('opentype');
+      font-display: swap;
+    }
+
+    body { 
+      font-family: 'MetaFont', 'Space Grotesk', sans-serif; 
+      background: var(--meta-dark); 
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    .font-alt { font-family: 'metabold', 'Space Grotesk', sans-serif; }
+
+    /* ===== ENHANCED GLASSMORPHISM ===== */
+    .glass {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .glass:hover::before {
+      opacity: 1;
+    }
+
+    .glass-strong {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+    }
+
+    .nav-pill {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.04) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .divider { 
+      border-top: 1px solid rgba(255, 255, 255, 0.12); 
+    }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    .gallery-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: url("assets/images/gallery-bg.webp");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: brightness(0.35) contrast(1.1);
+      transform: scale(1.1);
+      animation: bgZoom 20s ease-in-out infinite alternate;
+    }
+
+    .gallery-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(11, 23, 34, 0.6) 100%);
+      pointer-events: none;
+    }
+
+    @keyframes bgZoom {
+      0% { transform: scale(1.1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1%, -1%); }
+    }
+
+    /* ===== FLOATING ORBS ===== */
+    .ambient-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--meta-teal);
+      top: 10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--meta-red);
+      bottom: 20%;
+      right: -5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #fff;
+      top: 50%;
+      left: 50%;
+      animation-delay: -10s;
+      opacity: 0.08;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.9); }
+      75% { transform: translate(20px, 30px) scale(1.05); }
+    }
+
+    /* ===== ENHANCED THUMBNAILS ===== */
+    .thumb {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.03) 100%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, 
+        rgba(52, 178, 156, 0.2) 0%, 
+        transparent 50%, 
+        rgba(210, 0, 26, 0.15) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .thumb:hover { 
+      transform: translateY(-8px) scale(1.02); 
+      border-color: rgba(52, 178, 156, 0.4);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(52, 178, 156, 0.1);
+    }
+
+    .thumb:hover::after {
+      opacity: 1;
+    }
+
+    .thumb img {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .thumb:hover img {
+      transform: scale(1.1);
+    }
+
+    /* ===== ENHANCED BUTTONS ===== */
+    .btn {
+      position: relative;
+      background: linear-gradient(120deg, var(--meta-teal), var(--meta-red));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn:hover {
+      background-position: 100% 0;
+      transform: translateY(-3px);
+      box-shadow: 
+        0 20px 40px rgba(52, 178, 156, 0.3),
+        0 0 60px rgba(52, 178, 156, 0.1);
+    }
+
+    .btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* ===== ENHANCED LIGHTBOX ===== */
+    .lb-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .lb-backdrop[data-open="true"] { 
+      display: flex; 
+      opacity: 1;
+    }
+
+    .lb-card {
+      width: min(1100px, 100%);
+      border-radius: 26px;
+      overflow: hidden;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.06) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(24px) saturate(200%);
+      -webkit-backdrop-filter: blur(24px) saturate(200%);
+      box-shadow: 
+        0 40px 100px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(52, 178, 156, 0.1);
+      transform: scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lb-backdrop[data-open="true"] .lb-card {
+      transform: scale(1);
+    }
+
+    .lb-img {
+      width: 100%;
+      height: auto;
+      max-height: 78vh;
+      object-fit: contain;
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .lb-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .lb-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.06) 100%);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'metabold', 'Space Grotesk', sans-serif;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+      text-transform: uppercase;
+      opacity: 0.92;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lb-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+    }
+
+    .lb-btn:hover { 
+      transform: translateY(-2px); 
+      opacity: 1;
+      border-color: rgba(52, 178, 156, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .lb-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    /* ===== SCROLL BEHAVIOR ===== */
+    html { 
+      scroll-behavior: smooth; 
+      scroll-padding-top: 104px; 
+    }
+    
+    [id] { scroll-margin-top: 104px; }
+
+    @media (max-width: 767px) {
+      html { scroll-padding-top: 88px; }
+      [id] { scroll-margin-top: 88px; }
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ===== STAGGER CHILDREN ===== */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .stagger-children.active > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+    .stagger-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+    .stagger-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+    .stagger-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+    .stagger-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+    .stagger-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+    .stagger-children.active > *:nth-child(7) { transition-delay: 0.35s; }
+    .stagger-children.active > *:nth-child(8) { transition-delay: 0.4s; }
+
+    .stagger-children > * {
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== MAGNETIC HOVER ===== */
+    .magnetic {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== TEXT GRADIENT ===== */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--meta-teal) 0%, #4dd4b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== PULSE ANIMATION ===== */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(52, 178, 156, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(52, 178, 156, 0.5); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    /* ===== NAV LINKS ===== */
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* ===== SCROLL PROGRESS ===== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      z-index: 9999;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    /* ===== GALLERY SECTION CARDS ===== */
+    .gallery-section {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gallery-section:hover {
+      border-color: rgba(52, 178, 156, 0.3);
+      box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.4),
+        0 0 60px rgba(52, 178, 156, 0.05);
+    }
+
+    .camp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .camp-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--meta-teal);
+      box-shadow: 0 0 10px var(--meta-teal);
+    }
+
+    /* ===== IMAGE LOADING SHIMMER ===== */
+    .loading-shimmer {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.03) 25%, 
+        rgba(255, 255, 255, 0.08) 50%, 
+        rgba(255, 255, 255, 0.03) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ===== FOOTER LINKS ===== */
+    footer a {
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--meta-teal);
+      transform: translateY(-2px);
+    }
+
+    /* ===== HERO JUMP BUTTONS GRID ===== */
+    .jump-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .jump-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .jump-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--meta-teal), var(--meta-red));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .jump-btn:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* Mobile nav */
+    #mobileMenu {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mobileMenu.open {
+      max-height: 520px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Ambient Background Orbs -->
+  <div class="ambient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Fixed Background -->
+  <div class="gallery-bg"></div>
+
+  <!-- ================= NAV ================= -->
+  <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-5 md:py-6 z-50 reveal" id="navbar">
+    <a href="/index.html" class="flex items-center gap-3 magnetic group">
+      <img src="/assets/images/metalogosmall.png" class="h-12 md:h-16 transition-transform duration-300 group-hover:scale-110" alt="Meta logo" />
+      <span class="hidden md:block text-xs tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">METAMORPHO</span>
+    </a>
+
+    <div class="hidden md:block nav-pill px-10 py-4 rounded-full shadow-lg">
+      <ul class="flex gap-8 text-sm tracking-wider items-center">
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/index.html">HOME</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/about.html">ABOUT</a></li>
+        <li><a class="nav-link opacity-100 font-alt active" href="/gallery.html">GALLERY</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/metaventures.html">METAVENTURES</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/shop.html">SHOP</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/contact.html">CONTACT</a></li>
+        <li><a class="nav-link opacity-85 hover:opacity-100" href="/faq.html">FAQ</a></li>
+      </ul>
+    </div>
+
+   <!-- Mobile menu button -->
+    <button id="menuBtn" class="md:hidden glass rounded-full px-4 py-2 text-sm tracking-widest" aria-expanded="false"
+      aria-controls="mobileMenu">
+      MENU
+    </button>
+  </nav>
+
+  <!-- Mobile nav panel -->
+  <div id="mobileMenu" class="fixed top-[84px] left-4 right-4 z-50 glass rounded-3xl p-4">
+    <ul class="grid gap-2 text-sm tracking-wider">
+      <li><a class="navlink block" href="index.html">HOME</a></li>
+      <li><a class="navlink block" href="about.html">ABOUT</a></li>
+      <li><a class="navlink block" href="gallery.html">GALLERY</a></li>
+      <li><a class="navlink block" href="metaventures.html">METAVENTURES</a></li>
+      <li><a class="navlink block" href="shop.html">SHOP</a></li>
+      <li><a class="navlink block" href="contact.html">CONTACT</a></li>
+      <li><a class="navlink block" href="faq.html">FAQ</a></li>
+      <li><a class="navlink block" href="market.html">MARKET</a></li>
+    </ul>
+  </div>
+
+  <!-- ================= HERO ================= -->
+  <section class="pt-28 md:pt-32 px-6 md:px-12">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="reveal-left">
+        <h1 class="text-5xl md:text-6xl font-alt leading-tight mb-4">
+          Moments, memories, <span class="text-gradient">growth</span>.
+        </h1>
+        <p class="text-white/60 text-lg max-w-[60ch] mb-8">
+          A visual journey through the transformative experiences that shape our students.
+        </p>
+      </div>
+
+      <div class="glass rounded-3xl p-6 md:p-8 reveal-scale">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-2 h-2 rounded-full bg-[#34b29c] pulse-glow"></span>
+          <div class="text-sm tracking-widest opacity-70">JUMP TO</div>
+        </div>
+        <div class="jump-grid stagger-children" id="jumpButtons">
+          <a class="btn glass px-5 py-3 rounded-2xl text-xs tracking-widest jump-btn magnetic" href="#gung-ho">GUNG-HO</a>
+          <a class="btn glass px-5 py-3 rounded-2xl text-xs tracking-widest jump-btn magnetic" href="#hiking">HIKING TRIP</a>
+          <a class="btn glass px-5 py-3 rounded-2xl text-xs tracking-widest jump-btn magnetic" href="#highropes">HIGHROPES</a>
+          <a class="btn glass px-5 py-3 rounded-2xl text-xs tracking-widest jump-btn magnetic" href="#worldview">WORLDVIEW</a>
+          <a class="btn glass px-5 py-3 rounded-2xl text-xs tracking-widest jump-btn magnetic" href="#outreach">OUTREACH</a>
+          <a class="btn glass px-5 py-3 rounded-2xl text-xs tracking-widest jump-btn magnetic" href="#endyear">END YEAR CAMP</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECTIONS ================= -->
+  <section class="px-6 md:px-12 mt-10 pb-16 md:pb-24">
+    <div class="max-w-[1200px] mx-auto space-y-12">
+
+      <!-- O-week -->
+      <div id="o-week" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 01</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">Orientation Week</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              Introduction to the Meta culture, values, and community. A week of fun activities to break the ice and build connections.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="o-week"></div>
+      </div>
+
+      <!-- Gung-Ho -->
+      <div id="gung-ho" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 01</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">Gung-Ho</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              High energy, teamwork, resilience. A key experience that bonds students and pushes limits.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="gung-ho"></div>
+      </div>
+
+      <!-- Hiking -->
+      <div id="hiking" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 02</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">Hiking Trip</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              A journey to forge your character in some of the most beautiful places on earth.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="hiking"></div>
+      </div>
+
+      <!-- Highropes -->
+      <div id="highropes" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 03</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">Highropes</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              Courage and trust. Students face fear and learn to move forward anyway.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="highropes"></div>
+      </div>
+
+      <!-- Worldview -->
+      <div id="worldview" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 04</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">Worldview</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              Deep thinking, clear conviction. Sessions that shape how students see life and value.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="worldview"></div>
+      </div>
+
+      <!-- Outreach -->
+      <div id="outreach" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 05</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">Outreach</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              Serving people. Students learn humility, compassion, and the power of showing up.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="outreach"></div>
+      </div>
+
+      <!-- End Year -->
+      <div id="endyear" class="gallery-section glass rounded-3xl p-6 md:p-10 reveal">
+        <div class="camp-badge">Camp 06</div>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-alt mb-3">End Year Camp</h2>
+            <p class="text-white/70 max-w-[90ch]">
+              Reflection and celebration. A capstone moment that closes the year with meaning.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs tracking-widest opacity-70">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Click any photo to enlarge
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-gallery="endyear"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= LIGHTBOX ================= -->
+  <div class="lb-backdrop" id="lightbox" data-open="false" aria-hidden="true">
+    <div class="lb-card">
+      <img class="lb-img" id="lbImg" alt="Gallery image" />
+      <div class="lb-bar">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#34b29c]/20 flex items-center justify-center">
+            <svg class="w-4 h-4 text-[#34b29c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <div class="text-xs tracking-widest opacity-80" id="lbLabel">GALLERY</div>
+        </div>
+        <div class="flex gap-2">
+          <button class="lb-btn magnetic" id="lbPrev" type="button">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Prev
+          </button>
+          <button class="lb-btn magnetic" id="lbNext" type="button">
+            Next
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+          <button class="lb-btn magnetic" id="lbClose" type="button">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="px-6 md:px-12 pb-10 reveal">
+    <div class="max-w-[1200px] mx-auto divider pt-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+      <div class="flex items-center gap-3 magnetic">
+        <img src="/assets/images/metalogosmall.png" class="h-10" alt="Meta logo" loading="lazy" decoding="async" />
+        <div class="text-xs tracking-widest opacity-70">METAMORPHO</div>
+      </div>
+
+      <div class="text-xs text-white/55 leading-relaxed">
+        © <span id="year"></span> Metamorpho. All rights reserved.
+      </div>
+
+      <div class="flex gap-6 text-xs tracking-widest opacity-70">
+        <a class="hover:opacity-100" href="/contact.html">CONTACT</a>
+        <a class="hover:opacity-100" href="/faq.html">FAQ</a>
+        <a class="hover:opacity-100" href="/navigator-login.html">NAVIGATOR</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script>
+    // Year update
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Scroll Progress
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      scrollProgress.style.transform = `scaleX(${scrolled})`;
+    }, { passive: true });
+
+    // Intersection Observer for reveal animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          if (entry.target.classList.contains('stagger-children')) {
+            entry.target.classList.add('active');
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe all reveal elements
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Magnetic hover effect
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+      });
+      
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'translate(0, 0)';
+      });
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      
+      if (currentScroll > 100) {
+        navbar.classList.add('glass-strong');
+        navbar.style.padding = '0.75rem 1.5rem';
+      } else {
+        navbar.classList.remove('glass-strong');
+        navbar.style.padding = '';
+      }
+      
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    // ---------- CONFIG: Replace these with your real image paths ----------
+    const galleries = [
+      {
+        key: "o-week",
+        label: "Orientation Week",
+        images: [
+          "/assets/images/gallery/o-week-1.heic",
+          "/assets/images/gallery/o-week-2.jpg",
+          "/assets/images/gallery/o-week-3.heic",
+          "/assets/images/gallery/o-week-4.jpg",
+          "/assets/images/gallery/o-week-5.heic",
+          "/assets/images/gallery/o-week-6.jpg",
+          "/assets/images/gallery/o-week-7.heic",
+          "/assets/images/gallery/o-week-8.jpg",
+        ]
+      },
+      {
+        key: "gung-ho",
+        label: "Gung-Ho",
+        images: [
+          "/assets/images/gallery/gung-ho-1.JPG",
+          "/assets/images/gallery/gung-ho-2.JPG",
+          "/assets/images/gallery/gung-ho-3.JPG",
+          "/assets/images/gallery/gung-ho-4.JPG",
+          "/assets/images/gallery/gung-ho-5.JPG",
+          "/assets/images/gallery/gung-ho-6.JPG",
+          "/assets/images/gallery/gung-ho-7.JPG",
+          "/assets/images/gallery/gung-ho-8.JPG",
+        ]
+      },
+      {
+        key: "hiking",
+        label: "Hiking Trip",
+        images: [
+          "/assets/images/gallery/hiking-1.jpg",
+          "/assets/images/gallery/hiking-2.jpg",
+          "/assets/images/gallery/hiking-3.jpg",
+          "/assets/images/gallery/hiking-4.jpg",
+          "/assets/images/gallery/hiking-5.jpg",
+          "/assets/images/gallery/hiking-6.jpg",
+          "/assets/images/gallery/hiking-7.jpg",
+          "/assets/images/gallery/hiking-8.jpg",
+        ]
+      },
+      {
+        key: "highropes",
+        label: "Highropes",
+        images: [
+          "/assets/images/gallery/highropes-1.jpg",
+          "/assets/images/gallery/highropes-2.jpg",
+          "/assets/images/gallery/highropes-3.jpg",
+          "/assets/images/gallery/highropes-4.jpg",
+          "/assets/images/gallery/highropes-5.jpg",
+          "/assets/images/gallery/highropes-6.jpg",
+          "/assets/images/gallery/highropes-7.jpg",
+          "/assets/images/gallery/highropes-8.jpg",
+        ]
+      },
+      {
+        key: "worldview",
+        label: "Worldview",
+        images: [
+          "/assets/images/gallery/worldview-1.jpg",
+          "/assets/images/gallery/worldview-2.jpg",
+          "/assets/images/gallery/worldview-3.jpg",
+          "/assets/images/gallery/worldview-4.jpg",
+          "/assets/images/gallery/worldview-5.jpg",
+          "/assets/images/gallery/worldview-6.jpg",
+          "/assets/images/gallery/worldview-7.jpg",
+          "/assets/images/gallery/worldview-8.jpg",
+        ]
+      },
+      {
+        key: "outreach",
+        label: "Outreach",
+        images: [
+          "/assets/images/gallery/outreach-1.jpg",
+          "/assets/images/gallery/outreach-2.jpg",
+          "/assets/images/gallery/outreach-3.jpg",
+          "/assets/images/gallery/outreach-4.jpg",
+          "/assets/images/gallery/outreach-5.jpg",
+          "/assets/images/gallery/outreach-6.jpg",
+          "/assets/images/gallery/outreach-7.jpg",
+          "/assets/images/gallery/outreach-8.jpg",
+        ]
+      },
+      {
+        key: "endyear",
+        label: "End Year Camp",
+        images: [
+          "/assets/images/gallery/endyear-1.jpg",
+          "/assets/images/gallery/endyear-2.jpg",
+          "/assets/images/gallery/endyear-3.jpg",
+          "/assets/images/gallery/endyear-4.jpg",
+          "/assets/images/gallery/endyear-5.jpg",
+          "/assets/images/gallery/endyear-6.jpg",
+          "/assets/images/gallery/endyear-7.jpg",
+          "/assets/images/gallery/endyear-8.jpg",
+        ]
+      }
+    ];
+
+    // ---------- Render grids ----------
+    function renderGallery(sectionKey, label, images) {
+      const container = document.querySelector(`[data-gallery="${sectionKey}"]`);
+      if (!container) return;
+
+      const safeImages = (images || []).length ? images : [];
+
+      safeImages.forEach((src, idx) => {
+        const wrap = document.createElement("button");
+        wrap.type = "button";
+        wrap.className = "thumb loading-shimmer";
+        wrap.setAttribute("data-key", sectionKey);
+        wrap.setAttribute("data-index", String(idx));
+        wrap.setAttribute("aria-label", `${label} image ${idx + 1}`);
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = `${label} photo ${idx + 1}`;
+        img.loading = "lazy";
+        img.className = "w-full h-40 md:h-44 object-cover";
+
+        img.onload = () => {
+          wrap.classList.remove('loading-shimmer');
+        };
+
+        img.onerror = () => {
+          img.onerror = null;
+          img.src = "/assets/images/metalogosmall.png";
+          img.className = "w-full h-40 md:h-44 object-contain p-8 opacity-70";
+          wrap.classList.remove('loading-shimmer');
+        };
+
+        wrap.appendChild(img);
+        container.appendChild(wrap);
+      });
+    }
+
+    galleries.forEach(g => renderGallery(g.key, g.label, g.images));
+
+    // ---------- Lightbox ----------
+    const lightbox = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbLabel = document.getElementById("lbLabel");
+    const btnPrev = document.getElementById("lbPrev");
+    const btnNext = document.getElementById("lbNext");
+    const btnClose = document.getElementById("lbClose");
+
+    let currentKey = null;
+    let currentIndex = 0;
+
+    function getGallery(key) {
+      return galleries.find(g => g.key === key);
+    }
+
+    function openLightbox(key, index) {
+      const g = getGallery(key);
+      if (!g) return;
+
+      currentKey = key;
+      currentIndex = index;
+
+      lbLabel.textContent = `${g.label} — ${index + 1} / ${g.images.length}`;
+      lbImg.src = g.images[index];
+      lightbox.dataset.open = "true";
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.dataset.open = "false";
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      setTimeout(() => {
+        lbImg.src = "";
+      }, 400);
+    }
+
+    function go(delta) {
+      const g = getGallery(currentKey);
+      if (!g) return;
+      const n = g.images.length;
+      currentIndex = (currentIndex + delta + n) % n;
+      lbLabel.textContent = `${g.label} — ${currentIndex + 1} / ${n}`;
+      lbImg.src = g.images[currentIndex];
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".thumb");
+      if (!btn) return;
+      const key = btn.getAttribute("data-key");
+      const idx = parseInt(btn.getAttribute("data-index") || "0", 10);
+      openLightbox(key, idx);
+    });
+
+    btnPrev.addEventListener("click", () => go(-1));
+    btnNext.addEventListener("click", () => go(1));
+    btnClose.addEventListener("click", closeLightbox);
+
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const open = lightbox.dataset.open === "true";
+      if (!open) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
+    });
+
+     // Mobile nav
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      mobileMenu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          menuBtn.setAttribute("aria-expanded", "false");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mobileMenu.classList.contains("open")) return;
+        if (mobileMenu.contains(e.target) || menuBtn.contains(e.target)) return;
+        mobileMenu.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      });
+    }
+  </script>
+</body>
+</html>
